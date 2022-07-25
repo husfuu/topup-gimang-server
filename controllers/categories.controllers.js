@@ -1,9 +1,8 @@
-exports.viewDashboard = async (req, res) => {
+exports.viewCategories = async (req, res) => {
     try {
-        res.render('./admin/dashboard/view', {
-            title: 'Dashboard Page',
-        });
-
+        res.render('./admin/category/view', {
+            title: 'Category Page'
+        })
     } catch (error) {
         res.status(500).json({
             status: 'FAILED',
