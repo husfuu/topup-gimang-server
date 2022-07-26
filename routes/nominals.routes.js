@@ -1,5 +1,5 @@
-const router = require('express').Router();
-const nominalController = require('../controllers/nominals.controllers');
+const router = require("express").Router();
+const nominalController = require("../controllers/nominals.controllers");
 
 router.post("/nominals", nominalController.createNominal);
 router.get("/nominals/:id", nominalController.getNominalById);
