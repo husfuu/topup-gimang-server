@@ -8,12 +8,13 @@ const logger = require("morgan");
 // const indexRouter = require('./routes/index');
 const bankRoutes = require("./routes/bankaccounts.routes");
 const categoryRoutes = require("./routes/categories.routes");
-const nominalRoutes = require('./routes/nominals.routes');
-// const transactionRoutes = require('./routes/transactions.routes');
-// const userbiodataRoutes = require('./routes/userbiodatas.routes');
-// const voucherRoutes = require('./routes/vouchers.routes');
-// const paymentRoutes = require('./routes/payments.routes');
 // const dashboardRoutes = require('./routes/dashboards.routes');
+const nominalRoutes = require("./routes/nominals.routes");
+// const paymentRoutes = require('./routes/payments.routes');
+// const transactionRoutes = require('./routes/transactions.routes');
+const userbiodataRoutes = require("./routes/userbiodatas.routes");
+// const voucherRoutes = require('./routes/vouchers.routes');
+
 const app = express();
 
 // view engine setup
@@ -26,8 +27,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
-  "/adminlte",
-  express.static(path.join(__dirname, "/node_modules/admin-lte/"))
+    "/adminlte",
+    express.static(path.join(__dirname, "/node_modules/admin-lte/")),
 );
 
 // app.use('/', indexRouter);
@@ -36,21 +37,22 @@ app.use(bankRoutes);
 app.use(categoryRoutes);
 app.use(nominalRoutes);
 // app.use(dashboardRoutes);
+app.use(userbiodataRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  next(createError(404));
+    next(createError(404));
 });
 
 // error handler
 app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get("env") === "development" ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render("error");
+    // render the error page
+    res.status(err.status || 500);
+    res.render("error");
 });
 
 module.exports = app;
