@@ -2,7 +2,7 @@
     "endOfLine": "auto",
     "semi": true,
     "trailingComma": "all",
-    "tabWidth": 2,
+    "tabWidth": 4,
     "useTabs": false,
     "bracketSpacing": true,
     "bracketSameLine": false
