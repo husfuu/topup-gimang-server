@@ -17,15 +17,6 @@ module.exports = {
                     key: "id",
                 },
             },
-            nominalId: {
-                type: Sequelize.INTEGER,
-                references: {
-                    model: {
-                        tableName: "Nominals",
-                    },
-                    key: "id",
-                },
-            },
             userId: {
                 type: Sequelize.STRING,
             },
