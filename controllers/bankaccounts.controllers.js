@@ -1,7 +1,5 @@
 const { BankAccounts } = require("../models");
 
-console.log(BankAccounts);
-
 exports.createBankAccount = async (req, res) => {
     try {
         const { name, accountNumber } = req.body;

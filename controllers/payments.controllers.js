@@ -2,9 +2,9 @@ const { Payments } = require("../models");
 
 exports.createPayment = async (req, res) => {
     try {
-        const { bankAccountsId, type, status } = req.body;
+        const { bankAccountId, type, status } = req.body;
 
-        if (!bankAccountsId) {
+        if (!bankAccountId) {
             return res.status(401).json({
                 status: "FAILED",
                 data: {
@@ -32,7 +32,7 @@ exports.createPayment = async (req, res) => {
         }
 
         const newPayment = await Payments.create({
-            bankAccountsId,
+            bankAccountId,
             type,
             status,
         });
@@ -141,13 +141,13 @@ exports.updatePaymentById = async (req, res) => {
             });
         }
 
-        const { bankAccountsId, type, status } = req.body;
+        const { bankAccountId, type, status } = req.body;
 
-        if (!bankAccountsId) {
+        if (!bankAccountId) {
             return res.status(401).json({
                 status: "FAILED",
                 data: {
-                    message: "please fill the bankAccountsId",
+                    message: "please fill the bankAccountId",
                 },
             });
         }
@@ -172,7 +172,7 @@ exports.updatePaymentById = async (req, res) => {
 
         await Payments.update(
             {
-                bankAccountsId,
+                bankAccountId,
                 type,
                 status,
             },
