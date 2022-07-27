@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
         {
             coinName: DataTypes.STRING,
             coinQuantity: DataTypes.STRING,
+            price: DataTypes.STRING,
         },
         {
             sequelize,

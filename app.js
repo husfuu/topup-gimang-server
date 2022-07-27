@@ -13,7 +13,7 @@ const nominalRoutes = require("./routes/nominals.routes");
 const paymentRoutes = require("./routes/payments.routes");
 // const transactionRoutes = require('./routes/transactions.routes');
 const userbiodataRoutes = require("./routes/userbiodatas.routes");
-// const voucherRoutes = require('./routes/vouchers.routes');
+const voucherRoutes = require("./routes/vouchers.routes");
 
 const app = express();
 
@@ -39,6 +39,7 @@ app.use(nominalRoutes);
 // app.use(dashboardRoutes);
 app.use(paymentRoutes);
 app.use(userbiodataRoutes);
+app.use(voucherRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
