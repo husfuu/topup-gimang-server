@@ -1,55 +1,56 @@
-const { BankAccounts } = require("../models");
+const { Payments } = require("../models");
 
-console.log(BankAccounts);
-
-exports.createBankAccount = async (req, res) => {
+exports.createPayment = async (req, res) => {
     try {
-        const { name, accountNumber } = req.body;
+        const { bankAccountsId, type, status } = req.body;
 
-        if (!name) {
+        if (!bankAccountsId) {
             return res.status(401).json({
                 status: "FAILED",
                 data: {
-                    message: "please fill bank name",
+                    message: "please fill the bankAccountId",
                 },
             });
         }
 
-        if (!accountNumber) {
+        if (!type) {
             return res.status(401).json({
                 status: "FAILED",
                 data: {
-                    message: "please fill account number",
+                    message: "please fill the type",
                 },
             });
         }
 
-        const bankAccountExists = await BankAccounts.findOne({
-            where: {
-                name,
-                accountNumber,
-            },
+        if (!status) {
+            return res.status(401).json({
+                status: "FAILED",
+                data: {
+                    message: "please fill the status",
+                },
+            });
+        }
+
+        const newPayment = await Payments.create({
+            bankAccountsId,
+            type,
+            status,
         });
 
-        if (bankAccountExists) {
+        if (!newPayment) {
             return res.status(401).json({
                 status: "FAILED",
                 data: {
-                    message: "bank account is already exists!",
+                    message: "payment fail to created",
                 },
             });
         }
-
-        const bankAccount = await BankAccounts.create({
-            name,
-            accountNumber,
-        });
 
         res.status(201).json({
             status: "SUCCESS",
             data: {
-                message: "New Bank Account successfully created!",
-                bankAccount,
+                message: "New Payment succesfully created!",
+                newPayment,
             },
         });
     } catch (error) {
@@ -64,15 +65,15 @@ exports.createBankAccount = async (req, res) => {
     }
 };
 
-exports.getAllBankAccounts = async (req, res) => {
+exports.getAllPayments = async (req, res) => {
     try {
-        const bankAccounts = await BankAccounts.findAll();
+        const payments = await Payments.findAll();
 
-        if (!bankAccounts) {
+        if (!payments) {
             return res.status(401).json({
                 status: "FAILED",
                 data: {
-                    message: "The bank accounts not found",
+                    message: "the category not found!",
                 },
             });
         }
@@ -80,8 +81,8 @@ exports.getAllBankAccounts = async (req, res) => {
         res.status(201).json({
             status: "SUCCESS",
             data: {
-                messsage: "Successfully get all nominals",
-                bankAccounts,
+                message: "Successfully get all payments",
+                payments,
             },
         });
     } catch (error) {
@@ -96,26 +97,23 @@ exports.getAllBankAccounts = async (req, res) => {
     }
 };
 
-exports.getBankAccountById = async (req, res) => {
+exports.getPaymentById = async (req, res) => {
     try {
-        const bankAccountId = req.params.id;
-        const bankAccount = await BankAccounts.findByPk(bankAccountId);
+        const paymentId = req.params.id;
+        const payment = await Payments.findByPk(paymentId);
 
-        if (!bankAccount) {
+        if (!payment) {
             return res.status(401).json({
                 status: "FAILED",
                 data: {
-                    message: `bank account with id = ${bankAccountId} not found`,
+                    message: `payment with id = ${paymentId} is not found!`,
                 },
             });
         }
 
         res.status(201).json({
             status: "SUCCESS",
-            data: {
-                message: "Successfully get bank account!",
-                bankAccount,
-            },
+            payment,
         });
     } catch (error) {
         res.status(500).json({
@@ -129,48 +127,58 @@ exports.getBankAccountById = async (req, res) => {
     }
 };
 
-exports.updateBankAccountById = async (req, res) => {
+exports.updatePaymentById = async (req, res) => {
     try {
-        const bankAccountId = req.params.id;
-        const bankAccount = await BankAccounts.findByPk(bankAccountId);
+        const paymentId = req.params.id;
+        const payment = await Payments.findByPk(paymentId);
 
-        if (!bankAccount) {
+        if (!payment) {
             return res.status(401).json({
                 status: "FAILED",
                 data: {
-                    message: "bank account doesnt exist",
+                    message: `payment with id = ${paymentId} is not found!`,
                 },
             });
         }
 
-        const { name, accountNumber } = req.body;
+        const { bankAccountsId, type, status } = req.body;
 
-        if (!name) {
+        if (!bankAccountsId) {
             return res.status(401).json({
                 status: "FAILED",
                 data: {
-                    message: "please fill bank name",
+                    message: "please fill the bankAccountsId",
                 },
             });
         }
 
-        if (!accountNumber) {
+        if (!type) {
             return res.status(401).json({
                 status: "FAILED",
                 data: {
-                    message: "please fill account number",
+                    message: "please fill the type",
                 },
             });
         }
 
-        await BankAccounts.update(
+        if (!status) {
+            return res.status(401).json({
+                status: "FAILED",
+                data: {
+                    message: "please fill the status",
+                },
+            });
+        }
+
+        await Payments.update(
             {
-                name,
-                accountNumber,
+                bankAccountsId,
+                type,
+                status,
             },
             {
                 where: {
-                    id: bankAccountId,
+                    id: paymentId,
                 },
             },
         );
@@ -178,54 +186,54 @@ exports.updateBankAccountById = async (req, res) => {
         res.status(201).json({
             status: "SUCCESS",
             data: {
-                message: `Successfully update bank account with ${bankAccountId}`,
+                message: `Successfully update Payment with id = ${paymentId}`,
             },
         });
     } catch (error) {
         res.status(500).json({
             status: "FAILED",
             data: {
-                name: err.name,
-                message: err.message,
-                stack: err.stack,
+                name: error.name,
+                message: error.message,
+                stack: error.stack,
             },
         });
     }
 };
 
-exports.deleteBankAccountById = async (req, res) => {
+exports.deletePaymentById = async (req, res) => {
     try {
-        const bankAccountId = req.params.id;
-        const bankAccount = await BankAccounts.findByPk(bankAccountId);
+        const paymentId = req.params.id;
+        const payment = await Payments.findByPk(paymentId);
 
-        if (!bankAccount) {
+        if (!payment) {
             return res.status(401).json({
                 status: "FAILED",
                 data: {
-                    message: "bank account doesnt exist!",
+                    message: `payment with id = ${paymentId} is not found!`,
                 },
             });
         }
 
-        const deletedBankAccount = await BankAccounts.destroy({
+        await Payments.destroy({
             where: {
-                id: bankAccountId,
+                id: paymentId,
             },
         });
 
         res.status(201).json({
             status: "SUCCESS",
             data: {
-                message: "Successfully delete bank account",
+                message: `Successfully delete payment with id = ${paymentId}`,
             },
         });
     } catch (error) {
         res.status(500).json({
             status: "FAILED",
             data: {
-                name: err.name,
-                message: err.message,
-                stack: err.stack,
+                name: error.name,
+                message: error.message,
+                stack: error.stack,
             },
         });
     }

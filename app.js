@@ -10,7 +10,7 @@ const bankRoutes = require("./routes/bankaccounts.routes");
 const categoryRoutes = require("./routes/categories.routes");
 // const dashboardRoutes = require('./routes/dashboards.routes');
 const nominalRoutes = require("./routes/nominals.routes");
-// const paymentRoutes = require('./routes/payments.routes');
+const paymentRoutes = require("./routes/payments.routes");
 // const transactionRoutes = require('./routes/transactions.routes');
 const userbiodataRoutes = require("./routes/userbiodatas.routes");
 // const voucherRoutes = require('./routes/vouchers.routes');
@@ -37,6 +37,7 @@ app.use(bankRoutes);
 app.use(categoryRoutes);
 app.use(nominalRoutes);
 // app.use(dashboardRoutes);
+app.use(paymentRoutes);
 app.use(userbiodataRoutes);
 
 // catch 404 and forward to error handler
