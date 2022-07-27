@@ -1,63 +1,42 @@
-const { Nominals } = require("../models");
+const { Roles } = require("../models");
 
-exports.createNominal = async (req, res) => {
+exports.createRole = async (req, res) => {
     try {
-        const { coinName, coinQuantity, price } = req.body;
+        const { roleName } = req.body;
 
-        if (!coinName) {
+        if (!roleName) {
             return res.status(401).json({
                 status: "FAILED",
                 data: {
-                    message: "please fill the coin name",
+                    message: `please fill the role name`,
                 },
             });
         }
 
-        if (!coinQuantity) {
-            return res.status(401).json({
-                status: "FAILED",
-                data: {
-                    message: "please fill the coin quantity",
-                },
-            });
-        }
-
-        if (!price) {
-            return res.status(401).json({
-                status: "FAILED",
-                data: {
-                    message: "please fill the price",
-                },
-            });
-        }
-
-        const nominalExist = await Nominals.findOne({
+        const roleExist = await Roles.findOne({
             where: {
-                coinName,
-                coinQuantity,
+                roleName,
             },
         });
 
-        if (nominalExist) {
+        if (roleExist) {
             return res.status(401).json({
                 status: "FAILED",
                 data: {
-                    message: "the nominal is already exist",
+                    message: "the role is already exist",
                 },
             });
         }
 
-        const nominal = await Nominals.create({
-            coinName,
-            coinQuantity,
-            price,
+        const role = await Roles.create({
+            roleName,
         });
 
         res.status(201).json({
             status: "SUCCESS",
             data: {
-                message: `Successfully created nominal`,
-                nominal,
+                message: `Successfully created new role!`,
+                role,
             },
         });
     } catch (error) {
@@ -72,15 +51,15 @@ exports.createNominal = async (req, res) => {
     }
 };
 
-exports.getAllNominal = async (req, res) => {
+exports.getAllRoles = async (req, res) => {
     try {
-        const nominals = await Nominals.findAll();
+        const roles = await Roles.findAll();
 
-        if (!nominals) {
+        if (!roles) {
             return res.status(401).json({
                 status: "FAILED",
                 data: {
-                    message: "the nominals is not found",
+                    message: "the roles is not found",
                 },
             });
         }
@@ -88,8 +67,8 @@ exports.getAllNominal = async (req, res) => {
         return res.status(201).json({
             status: "SUCCESS",
             data: {
-                message: "Successfully get all nominals",
-                nominals,
+                message: "Successfully get all roles",
+                roles,
             },
         });
     } catch (error) {
@@ -104,17 +83,17 @@ exports.getAllNominal = async (req, res) => {
     }
 };
 
-exports.getNominalById = async (req, res) => {
+exports.getRoleById = async (req, res) => {
     try {
         const id = req.params.id;
 
-        const nominal = await Nominals.findByPk(id);
+        const role = await Roles.findByPk(id);
 
-        if (!nominal) {
+        if (!role) {
             return res.status(401).json({
                 status: "FAILED",
                 data: {
-                    message: `nominal with id ${id} not found`,
+                    message: `role with id ${id} not found`,
                 },
             });
         }
@@ -122,8 +101,8 @@ exports.getNominalById = async (req, res) => {
         res.status(201).json({
             status: "SUCCESS",
             data: {
-                message: `Succesfully get nominal with id ${id}`,
-                nominal,
+                message: `Successfully get role with id ${id}`,
+                role,
             },
         });
     } catch (error) {
@@ -138,37 +117,37 @@ exports.getNominalById = async (req, res) => {
     }
 };
 
-exports.updateNominalById = async (req, res) => {
+exports.updateRoleById = async (req, res) => {
     try {
-        const nominalId = req.params.id;
-        const nominal = await Nominals.findByPk(nominalId);
+        const id = req.params.id;
+        const role = await Roles.findByPk(id);
 
-        if (!nominal) {
+        if (!role) {
             return res.status(401).json({
                 status: "FAILED",
                 data: {
-                    message: `nominal with ${id} is not found`,
+                    message: `role with id ${id} not found`,
                 },
             });
         }
 
-        const { coinName, coinQuantity } = req.body;
+        const { roleName } = req.body;
 
-        await Nominals.update(
+        await Roles.update(
             {
-                coinName,
-                coinQuantity,
+                roleName,
             },
             {
                 where: {
-                    id: nominalId,
+                    id,
                 },
             },
         );
 
         res.status(201).json({
+            status: "SUCCESS",
             data: {
-                message: `Succesfully update nominal with id ${nominalId}`,
+                message: `Succesfully update role with id ${id}`,
             },
         });
     } catch (error) {
@@ -183,30 +162,30 @@ exports.updateNominalById = async (req, res) => {
     }
 };
 
-exports.deleteNominalById = async (req, res) => {
+exports.deleteRoleById = async (req, res) => {
     try {
-        const nominalId = req.params.id;
-        const nominal = await Nominals.findByPk(nominalId);
+        const id = req.params.id;
+        const role = await Roles.findByPk(id);
 
-        if (!nominal) {
+        if (!role) {
             return res.status(401).json({
                 status: "FAILED",
                 data: {
-                    message: `Nominal with id ${nominalId} is not found`,
+                    message: `Role with id ${id} is not found`,
                 },
             });
         }
 
-        await Nominals.destroy({
+        await Roles.destroy({
             where: {
-                id: nominalId,
+                id,
             },
         });
 
         res.status(201).json({
             status: "SUCCESS",
             data: {
-                message: `Successfully delete nominal with id ${nominalId}`,
+                message: `Successfully delete role with id ${id}`,
             },
         });
     } catch (error) {
