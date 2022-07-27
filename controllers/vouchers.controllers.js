@@ -134,7 +134,9 @@ exports.createVoucher = async (req, res) => {
 
 exports.getAllVouchers = async (req, res) => {
     try {
-        const vouchers = await Vouchers.findAll();
+        const vouchers = await Vouchers.findAll({
+            include: Nominals,
+        });
 
         if (!vouchers) {
             return res.status(401).json({
@@ -167,7 +169,12 @@ exports.getAllVouchers = async (req, res) => {
 exports.getVoucherById = async (req, res) => {
     try {
         const voucherId = req.params.id;
-        const voucher = await Vouchers.findByPk(voucherId);
+
+        const voucher = await Vouchers.findOne({
+            where: { id: voucherId },
+            include: Nominals,
+        });
+        // const voucher = await Vouchers.findByPk(voucherId);
 
         if (!voucher) {
             return res.status(401).json({
