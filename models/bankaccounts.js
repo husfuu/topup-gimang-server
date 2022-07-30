@@ -3,6 +3,10 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
     class BankAccounts extends Model {
         static associate(models) {
+            this.belongsTo(models.Admins, {
+                foreignKey: "adminId",
+            });
+
             this.hasMany(models.Payments, {
                 foreignKey: "bankAccountId",
             });
@@ -10,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
     BankAccounts.init(
         {
-            userId: DataTypes.STRING,
+            adminId: DataTypes.STRING,
             name: DataTypes.STRING,
             accountNumber: DataTypes.STRING,
         },

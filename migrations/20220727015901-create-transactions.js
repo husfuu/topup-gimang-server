@@ -11,9 +11,6 @@ module.exports = {
             userId: {
                 type: Sequelize.STRING,
             },
-            adminId: {
-                type: Sequelize.STRING,
-            },
             paymentId: {
                 type: Sequelize.INTEGER,
                 references: {

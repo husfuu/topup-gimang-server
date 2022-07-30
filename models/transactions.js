@@ -16,7 +16,6 @@ module.exports = (sequelize, DataTypes) => {
     Transactions.init(
         {
             userId: DataTypes.STRING,
-            adminId: DataTypes.STRING,
             paymentId: DataTypes.STRING,
             voucherId: DataTypes.STRING,
             tax: DataTypes.STRING,
