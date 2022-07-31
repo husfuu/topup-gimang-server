@@ -7,13 +7,13 @@
     </tr>
     </thead>
     <tbody>
-      <% for(let i = 0; i < category.length; i++){ %>
+      <% for(let i = 0; i < categories.length; i++){ %>
         <tr>
           <td><%= i + 1 %></td>
-          <td><%= category[i].name %></td>
+          <td><%= categories[i].name %></td>
           <td>
-            <form action="/category/delete/<%= category[i]._id %>?_method=DELETE" method="POST">
-              <a href="/category/edit/<%= category[i]._id %>" class="btn btn-info btn-sm">
+            <form action="/categories/delete/<%= categories[i].id %>?_method=DELETE" method="POST">
+              <a href="/categories/edit/<%= categories[i].id %>" class="btn btn-info btn-sm">
                 <i class="fas fa-pencil-alt"></i>
                 Ubah
               </a>

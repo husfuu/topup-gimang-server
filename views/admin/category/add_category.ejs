@@ -1,11 +1,11 @@
 <%- include ../../partials/header.ejs %>
 <%- include ../../partials/navbar.ejs %>
 <%- include ../../partials/sidebar.ejs %>
+
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
-    <section class="content-header">
+     <section class="content-header">
       <div class="container-fluid">
-        <%- include ../../partials/message.ejs %>
         <div class="row mb-2">
           <div class="col-sm-6">
             <h1>Kategori</h1>
@@ -13,7 +13,8 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="/">Home</a></li>
-              <li class="breadcrumb-item active">Kategori</li>
+              <li class="breadcrumb-item"> <a href="/categories">Kategori</a></li>
+              <li class="breadcrumb-item active">Tambah</li>
             </ol>
           </div>
         </div>
@@ -25,22 +26,26 @@
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">
-                  <a href="/category/create" class="btn btn-primary" >
-                    <i class="nav-icon far fa-plus-square" >
-                      Tambah
-                    </i>
-                  </a>
-                </h3>
+            <div class="card card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">Quick Example</h3>
+                </div>
+                <!-- /.card-header -->
+                <!-- form start -->
+                <form action="/categories/create" method="POST" >
+                  <div class="card-body">
+                    <div class="form-group">
+                      <label for="name">Masukan nama kategori</label>
+                      <input type="text" name="name" class="form-control" id="name" placeholder="masukan nama kategori ..." required>
+                    </div>
+                  </div>
+                  <!-- /.card-body -->
+  
+                  <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                  </div>
+                </form>
               </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <%- include ./table.ejs %>
-              </div>
-              <!-- /.card-body -->
-            </div>
             <!-- /.card -->
 
             <!-- /.card -->
