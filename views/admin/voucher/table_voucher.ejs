@@ -1,0 +1,65 @@
+<table id="example2" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+      <th>No.</th>
+      <th>Nama game</th>
+      <th>Kategori</th>
+      <th>Nominal</th>
+      <th>Status</th>
+      <th>Aksi</th>
+    </tr>
+    </thead>
+    <tbody>
+      <% for(let i = 0; i < vouchers.length; i++){ %>
+        <tr>
+          <td><%= i + 1 %></td>
+          <td><%= vouchers[i].name %></td>
+          <td><%= vouchers[i]?.Category?.name ?? '-' %></td>
+          <td>
+            <% vouchers[i].Nominals.forEach(nominal => { %>
+              <span class="badge badge-warning">
+                <%= nominal.coinName %> <%= nominal.coinQuantity %> 
+              </span>
+            <% }) %>
+          </td>
+          
+          <td>
+            <% if(vouchers[i].status === 'Y') { %>
+              <span class="badge badge-success">
+                Aktif
+              </span>
+            <% } else { %>
+              <span class="badge badge-danger">
+                Tidak aktif
+              </span>
+            <% } %>
+          </td>
+          
+          <td>
+            <form action="/voucher/status/<%= vouchers[i].id %>?_method=PUT" method="POST" style="display: inline-block;">
+              <button class="btn btn-primary btn-sm">
+                <i class="fas fa-folder"></i>
+                <% if(vouchers[i].status === 'Y') { %>
+                  
+                    Matikan
+                  
+                <% } else { %>
+                    Hidupkan
+                <% } %>
+              </button>
+            </form>
+            <a href="/vouchers/edit/<%= vouchers[i].id %>" class="btn btn-info btn-sm">
+              <i class="fas fa-pencil-alt"></i>
+              Ubah
+            </a>
+            <form style="display: inline-block;" action="/vouchers/delete/<%= vouchers[i].id %>" method="POST">
+              <button class="btn btn-danger btn-sm">
+                <i class="fas fa-trash"></i>
+                Hapus
+              </button>
+            </form>
+          </td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>

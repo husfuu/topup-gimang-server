@@ -1,10 +1,19 @@
 const router = require("express").Router();
-const voucher = require("../controllers/vouchers.controllers");
+const voucherController = require("../controllers/vouchers.controllers");
 
-router.post("/vouchers", voucher.createVoucher);
-router.get("/vouchers/:id", voucher.getVoucherById);
-router.get("/vouchers", voucher.getAllVouchers);
-router.put("/vouchers/:id", voucher.updateVoucherById);
-router.delete("/vouchers/:id", voucher.deleteVoucherById);
+router.post("/api/v1/vouchers", voucherController.createVoucher);
+router.get("/api/v1/vouchers/:id", voucherController.getVoucherById);
+router.get("/api/v1/vouchers", voucherController.getAllVouchers);
+router.put("/api/v1/vouchers/:id", voucherController.updateVoucherById);
+router.delete("/api/v1/vouchers/:id", voucherController.deleteVoucherById);
 
+// view
+router.get("/vouchers", voucherController.viewAllVouchers);
+router.get("/vouchers/create", voucherController.viewCreateVouchers);
+router.get("/vouchers/edit/:id", voucherController.viewEditVouchers);
+
+// actions
+router.post("/vouchers/create", voucherController.actionCreateVouchers);
+router.post("/vouchers/edit/:id", voucherController.actionEditVouchers);
+router.post("/vouchers/delete/:id", voucherController.actionDeleteVouchers);
 module.exports = router;

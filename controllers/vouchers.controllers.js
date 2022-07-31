@@ -89,7 +89,6 @@ exports.createVoucher = async (req, res) => {
         const newVoucher = await Vouchers.create({
             name,
             categoryId,
-            userId,
             status,
             thumbnail,
         });
@@ -135,7 +134,7 @@ exports.createVoucher = async (req, res) => {
 exports.getAllVouchers = async (req, res) => {
     try {
         const vouchers = await Vouchers.findAll({
-            include: Nominals,
+            include: [Categories, Nominals],
         });
 
         if (!vouchers) {
@@ -172,7 +171,7 @@ exports.getVoucherById = async (req, res) => {
 
         const voucher = await Vouchers.findOne({
             where: { id: voucherId },
-            include: Nominals,
+            include: [Categories, Nominals],
         });
         // const voucher = await Vouchers.findByPk(voucherId);
 
@@ -303,11 +302,14 @@ exports.updateVoucherById = async (req, res) => {
             },
         );
 
-        const updatedVoucher2 = Vouchers.findByPk(voucherId);
+        const updatedVoucher2 = Vouchers.findOne({
+            where: { id: voucherId },
+            include: [Categories, Nominals],
+        });
 
         console.log(updatedVoucher);
 
-        await updatedVoucher2.setNominal(nominalIds);
+        await updatedVoucher2.setNominals(nominalIds);
 
         // await updatedVoucher.updateNominals(
         //     selectedNominals,
@@ -386,5 +388,170 @@ exports.deleteVoucherById = async (req, res) => {
                 stack: error.stack,
             },
         });
+    }
+};
+
+// ========================================================================
+exports.viewAllVouchers = async (req, res) => {
+    try {
+        const vouchers = await Vouchers.findAll({
+            include: [Categories, Nominals],
+        });
+        res.render("admin/voucher/view_voucher", {
+            title: "Voucher Page",
+            vouchers,
+        });
+    } catch (error) {
+        res.redirect("/vouchers");
+    }
+};
+
+exports.viewCreateVouchers = async (req, res) => {
+    try {
+        const categories = await Categories.findAll();
+        const nominals = await Nominals.findAll();
+
+        res.render("admin/voucher/add_voucher", {
+            title: "Add Voucher",
+            categories,
+            nominals,
+        });
+    } catch (error) {
+        res.redirect("/vouchers");
+    }
+};
+
+exports.viewEditVouchers = async (req, res) => {
+    try {
+        const categories = await Categories.findAll();
+        const nominals = await Nominals.findAll();
+        const voucherId = req.params.id;
+
+        const voucher = await Vouchers.findOne({
+            where: { id: voucherId },
+            include: Nominals,
+        });
+        // res.send(voucher);
+        res.render("admin/voucher/edit_voucher", {
+            title: "Edit Voucher",
+            voucher,
+            categories,
+            nominals,
+        });
+    } catch (error) {
+        res.redirect("/vouhcers");
+    }
+};
+
+exports.actionCreateVouchers = async (req, res) => {
+    const t = await sequelize.transaction();
+    try {
+        const { name, categoryId, nominalIds, status, thumbnail } = req.body;
+        // find all nominals based on nominalIds in Nominals Table
+        const selectedNominals = await Nominals.findAll(
+            {
+                where: {
+                    id: {
+                        [Op.in]: nominalIds,
+                    },
+                },
+            },
+            { transaction: t },
+        );
+
+        const newVoucher = await Vouchers.create({
+            name,
+            categoryId,
+            status,
+            thumbnail,
+        });
+
+        await newVoucher.addNominals(selectedNominals, {
+            transaction: t,
+            through: {
+                voucherId: newVoucher.id,
+            },
+        });
+
+        await t.commit();
+
+        res.redirect("/vouchers");
+    } catch (error) {
+        console.log("error woyy");
+        console.log(error);
+        await t.rollback();
+        res.redirect("/vouchers");
+    }
+};
+
+exports.actionEditVouchers = async (req, res) => {
+    const t = await sequelize.transaction();
+
+    try {
+        const voucherId = req.params.id;
+
+        const { name, categoryId, nominalIds, status, thumbnail } = req.body;
+        // console.log(name, nominalIds, status, thumbnail);
+        // console.log(`ini category ${categoryId}`);
+        const selectedCategoryId = await Categories.findByPk(categoryId);
+
+        const selectedNominals = await Nominals.findAll(
+            {
+                where: {
+                    id: {
+                        [Op.in]: nominalIds,
+                    },
+                },
+            },
+            { transaction: t },
+        );
+
+        const updatedVoucher = await Vouchers.update(
+            {
+                name,
+                categoryId,
+                nominalIds,
+                status,
+                thumbnail,
+            },
+            {
+                where: { id: voucherId },
+            },
+        );
+
+        const updatedVoucher2 = await Vouchers.findByPk(voucherId);
+        console.log(updatedVoucher2);
+        res.send(updatedVoucher2);
+        await updatedVoucher2.setNominal(nominalIds);
+
+        await t.commit();
+
+        res.redirect("/vouchers");
+    } catch (error) {
+        await t.rollback();
+        console.log(error);
+        res.send(error);
+    }
+};
+
+exports.actionDeleteVouchers = async (req, res) => {
+    try {
+        const voucherId = req.params.id;
+
+        await NominalVouchers.destroy({
+            where: {
+                voucherId,
+            },
+        });
+
+        await Vouchers.destroy({
+            where: {
+                id: voucherId,
+            },
+        });
+
+        res.redirect("/vouchers");
+    } catch (error) {
+        res.redirect("/vouchers");
     }
 };
