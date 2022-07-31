@@ -220,3 +220,91 @@ exports.deleteNominalById = async (req, res) => {
         });
     }
 };
+
+// ==================================
+
+exports.viewAllNominals = async (req, res) => {
+    try {
+        const nominals = await Nominals.findAll();
+
+        res.render("admin/nominal/view_nominal", {
+            title: "Nominal Page",
+            nominals,
+        });
+    } catch (error) {
+        res.redirect("/nominals");
+    }
+};
+
+exports.viewCreateNominals = async (req, res) => {
+    try {
+        res.render("admin/nominal/add_nominal", {
+            title: "Add Nominal",
+        });
+    } catch (error) {
+        res.redirect("/nominals");
+    }
+};
+
+exports.viewEditNominals = async (req, res) => {
+    try {
+        const nominalId = req.params.id;
+        const nominal = await Nominals.findByPk(nominalId);
+
+        res.render("admin/nominal/edit_nominal", {
+            nominal,
+            title: "Edit Nominal",
+        });
+    } catch (error) {
+        res.redirect("/nominals");
+    }
+};
+
+exports.actionCreateNominals = async (req, res) => {
+    try {
+        const { coinName, coinQuantity, price } = req.body;
+        console.log(coinName, coinQuantity, price);
+        const nominal = await Nominals.create({
+            coinName,
+            coinQuantity,
+            price,
+        });
+
+        res.redirect("/nominals");
+    } catch (error) {}
+};
+
+exports.actionEditNominals = async (req, res) => {
+    try {
+        const nominalId = req.params.id;
+        const { coinName, coinQuantity, price } = req.body;
+
+        await Nominals.update(
+            {
+                coinName,
+                coinQuantity,
+                price,
+            },
+            {
+                where: {
+                    id: nominalId,
+                },
+            },
+        );
+
+        res.redirect("/nominals");
+    } catch (error) {}
+};
+
+exports.actionDeleteNominals = async (req, res) => {
+    try {
+        const nominalId = req.params.id;
+
+        await Nominals.destroy({
+            where: {
+                id: nominalId,
+            },
+        });
+        res.redirect("/nominals");
+    } catch (error) {}
+};
