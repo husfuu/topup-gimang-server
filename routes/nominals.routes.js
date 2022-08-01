@@ -14,7 +14,7 @@ router.get("/nominals/edit/:id", nominalController.viewEditNominals);
 
 // actions
 router.post("/nominals/create", nominalController.actionCreateNominals);
-router.post("/nominals/delete/:id", nominalController.actionDeleteNominals);
 router.post("/nominals/edit/:id", nominalController.actionEditNominals);
+router.post("/nominals/delete/:id", nominalController.actionDeleteNominals);
 
 module.exports = router;
