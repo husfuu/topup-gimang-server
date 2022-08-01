@@ -1,8 +1,8 @@
-const { BankAccounts } = require("../models");
+const { BankAccounts, Admins } = require("../models");
 
 exports.createBankAccount = async (req, res) => {
     try {
-        const { name, accountNumber } = req.body;
+        const { name, accountNumber, adminId } = req.body;
 
         if (!name) {
             return res.status(401).json({
@@ -18,6 +18,15 @@ exports.createBankAccount = async (req, res) => {
                 status: "FAILED",
                 data: {
                     message: "please fill account number",
+                },
+            });
+        }
+
+        if (!adminId) {
+            return res.status(401).json({
+                status: "FAILED",
+                data: {
+                    message: "please fill the adminId",
                 },
             });
         }
@@ -41,12 +50,13 @@ exports.createBankAccount = async (req, res) => {
         const bankAccount = await BankAccounts.create({
             name,
             accountNumber,
+            adminId,
         });
 
         res.status(201).json({
             status: "SUCCESS",
+            message: "New Bank Account successfully created!",
             data: {
-                message: "New Bank Account successfully created!",
                 bankAccount,
             },
         });
@@ -64,7 +74,9 @@ exports.createBankAccount = async (req, res) => {
 
 exports.getAllBankAccounts = async (req, res) => {
     try {
-        const bankAccounts = await BankAccounts.findAll();
+        const bankAccounts = await BankAccounts.findAll({
+            include: Admins,
+        });
 
         if (!bankAccounts) {
             return res.status(401).json({
@@ -77,8 +89,8 @@ exports.getAllBankAccounts = async (req, res) => {
 
         res.status(201).json({
             status: "SUCCESS",
+            messsage: "Successfully get all nominals",
             data: {
-                messsage: "Successfully get all nominals",
                 bankAccounts,
             },
         });
@@ -97,7 +109,11 @@ exports.getAllBankAccounts = async (req, res) => {
 exports.getBankAccountById = async (req, res) => {
     try {
         const bankAccountId = req.params.id;
-        const bankAccount = await BankAccounts.findByPk(bankAccountId);
+
+        const bankAccount = await BankAccounts.findOne({
+            where: { id: bankAccountId },
+            include: Admins,
+        });
 
         if (!bankAccount) {
             return res.status(401).json({
@@ -110,8 +126,8 @@ exports.getBankAccountById = async (req, res) => {
 
         res.status(201).json({
             status: "SUCCESS",
+            message: "Successfully get bank account!",
             data: {
-                message: "Successfully get bank account!",
                 bankAccount,
             },
         });
@@ -175,9 +191,7 @@ exports.updateBankAccountById = async (req, res) => {
 
         res.status(201).json({
             status: "SUCCESS",
-            data: {
-                message: `Successfully update bank account with ${bankAccountId}`,
-            },
+            message: `Successfully update bank account with ${bankAccountId}`,
         });
     } catch (error) {
         res.status(500).json({
@@ -213,9 +227,7 @@ exports.deleteBankAccountById = async (req, res) => {
 
         res.status(201).json({
             status: "SUCCESS",
-            data: {
-                message: "Successfully delete bank account",
-            },
+            message: `Successfully delete bank account ${bankAccountId}`,
         });
     } catch (error) {
         res.status(500).json({
@@ -226,5 +238,68 @@ exports.deleteBankAccountById = async (req, res) => {
                 stack: err.stack,
             },
         });
+    }
+};
+
+// halama menampilkan semua bank account
+exports.viewAllBankAccounts = async (req, res) => {
+    try {
+        const bankAccounts = await BankAccounts.findAll({
+            include: Admins,
+        });
+
+        res.render("admin/bankAccount/view_bankAccount", {
+            title: "Bank Account Page",
+            bankAccounts,
+        });
+    } catch (error) {
+        res.redirect("/bankaccounts");
+    }
+};
+// halaman form menambahkan bank account
+exports.viewCreateBankAccount = async (req, res) => {
+    try {
+        res.render("admin/bankAccount/add_bankAccount", {
+            title: "Add Bank Account",
+        });
+    } catch (error) {
+        res.redirect("/bankaccounts");
+    }
+};
+// halaman form mengedit bank account -- dengan nilai-nilaninya sudah ada di input box
+exports.viewEditBankAccount = async (req, res) => {
+    try {
+        const bankAccountId = req.params.id;
+        const bankAccount = await BankAccounts.findOne({
+            where: { id: bankAccountId },
+            include: Admins,
+        });
+
+        res.render("admin/bankAccount/edit_bankAccount", {
+            title: "Edit Bank Account",
+            bankAccount,
+        });
+    } catch (error) {
+        res.redirect("/bankaccounts");
+    }
+};
+
+exports.actionCreateBankAccount = async (req, res) => {};
+
+exports.actionEditBankAccount = async (req, res) => {};
+
+exports.actionDeleteBankAccount = async (req, res) => {
+    try {
+        const bankAccountId = req.params.id;
+
+        await BankAccounts.destroy({
+            where: {
+                id: bankAccountId,
+            },
+        });
+
+        res.redirect("/bankaccounts");
+    } catch (error) {
+        res.redirect("/bankaccounts");
     }
 };
