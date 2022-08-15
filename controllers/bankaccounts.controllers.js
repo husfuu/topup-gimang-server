@@ -2,7 +2,7 @@ const { BankAccounts, Admins } = require("../models");
 
 exports.createBankAccount = async (req, res) => {
     try {
-        const { name, accountNumber, adminId } = req.body;
+        const { name, accountNumber, adminId, paymentId } = req.body;
 
         if (!name) {
             return res.status(401).json({
@@ -31,6 +31,15 @@ exports.createBankAccount = async (req, res) => {
             });
         }
 
+        if (!paymentId) {
+            return res.status(401).json({
+                status: "FAILED",
+                data: {
+                    message: "please fill the paymentId",
+                },
+            });
+        }
+
         const bankAccountExists = await BankAccounts.findOne({
             where: {
                 name,
@@ -51,6 +60,7 @@ exports.createBankAccount = async (req, res) => {
             name,
             accountNumber,
             adminId,
+            paymentId,
         });
 
         res.status(201).json({
@@ -75,7 +85,7 @@ exports.createBankAccount = async (req, res) => {
 exports.getAllBankAccounts = async (req, res) => {
     try {
         const bankAccounts = await BankAccounts.findAll({
-            include: Admins,
+            include: [Admins, "payment"],
         });
 
         if (!bankAccounts) {
@@ -112,7 +122,7 @@ exports.getBankAccountById = async (req, res) => {
 
         const bankAccount = await BankAccounts.findOne({
             where: { id: bankAccountId },
-            include: Admins,
+            include: [Admins, "payment"],
         });
 
         if (!bankAccount) {
