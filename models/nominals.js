@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: "nominalId",
                 through: models.NominalVouchers,
             });
+
+            this.hasMany(models.Transactions, {
+                foreignKey: "nominalId",
+            });
         }
     }
     Nominals.init(
