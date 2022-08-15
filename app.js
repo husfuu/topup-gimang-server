@@ -3,16 +3,19 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const session = require("express-session");
+const flash = require("connect-flash");
 
 // ROUTES
 // const indexRouter = require('./routes/index');
+const admin = require("./routes/admins.routes");
 const bankRoutes = require("./routes/bankaccounts.routes");
 const categoryRoutes = require("./routes/categories.routes");
 // const dashboardRoutes = require('./routes/dashboards.routes');
 const nominalRoutes = require("./routes/nominals.routes");
 const paymentRoutes = require("./routes/payments.routes");
 const roleRoutes = require("./routes/roles.routes");
-// const transactionRoutes = require('./routes/transactions.routes');
+const transactionRoutes = require("./routes/transactions.routes");
 const userbiodataRoutes = require("./routes/userbiodatas.routes");
 const voucherRoutes = require("./routes/vouchers.routes");
 
@@ -22,6 +25,15 @@ const app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
+app.use(
+    session({
+        secret: "keyboard cat",
+        resave: false,
+        saveUninitialized: true,
+        cookie: {},
+    }),
+);
+app.use(flash());
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -34,12 +46,14 @@ app.use(
 
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
+app.use(admin);
 app.use(bankRoutes);
 app.use(categoryRoutes);
 app.use(nominalRoutes);
 // app.use(dashboardRoutes);
 app.use(roleRoutes);
 app.use(paymentRoutes);
+app.use(transactionRoutes);
 app.use(userbiodataRoutes);
 app.use(voucherRoutes);
 
