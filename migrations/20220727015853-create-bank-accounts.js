@@ -23,6 +23,15 @@ module.exports = {
             accountNumber: {
                 type: Sequelize.STRING,
             },
+            paymentId: {
+                type: Sequelize.INTEGER,
+                references: {
+                    model: {
+                        tableName: "Payments",
+                    },
+                    key: "id",
+                },
+            },
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE,
