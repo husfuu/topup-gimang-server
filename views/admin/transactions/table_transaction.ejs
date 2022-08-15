@@ -1,0 +1,71 @@
+<table id="example2" class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>No.</th>
+        <th>Nama game</th>
+        <th>Item</th>
+        <th>Total harga</th>
+        <th>Status</th>
+        <th>Nama player</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for(let i=0; i < transactions.length; i++){ %>
+        <tr>
+          <td>
+            <%= i + 1 %>
+          </td>
+  
+          <td>
+            <%= transactions[i]?.Voucher.name %>  
+          </td>
+          <td>
+            <%= transactions[i]?.Nominal.coinName %>
+              <%= transactions[i]?.Nominal?.coinQuantity %>
+          </td>
+          <td>
+            <%= transactions[i].value %>
+          </td>
+  
+  
+          <td>
+            <% if(transactions[i].status==='pending' ) { %>
+              <span class="badge badge-warning">
+                <%= transactions[i].status %>
+              </span>
+              <% } else if(transactions[i].status==='success' ) { %>
+                <span class="badge badge-success">
+                  <%= transactions[i].status %>
+                </span>
+                <% } else { %>
+                  <span class="badge badge-danger">
+                    <%= transactions[i].status %>
+                  </span>
+                  <%} %>
+          </td>
+  
+          <td>
+            husni
+          </td>
+  
+          <td>
+            <form style="display: inline-block;"
+              action="/transactions/status/<%= transactions[i].id %>?status=failed" method="POST">
+              <button class="btn btn-danger btn-sm" type="submit">
+                <i class="fas fa-times-circle"></i>
+                Tolak
+              </button>
+            </form>
+            <form style="display: inline-block;"
+              action="/transactions/status/<%= transactions[i].id %>?status=success" method="POST">
+              <button class="btn btn-info btn-sm" type="submit">
+                <i class="fas fa-check"></i>
+                Terima
+              </button>
+            </form>
+          </td>
+        </tr>
+        <% } %>
+    </tbody>
+  </table>
