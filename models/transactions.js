@@ -8,16 +8,21 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: "voucherId",
             });
 
-            this.belongsTo(models.Payments, {
-                foreignKey: "paymentId",
+            this.belongsTo(models.BankAccounts, {
+                foreignKey: "bankAccountId",
+            });
+
+            this.belongsTo(models.Nominals, {
+                foreignKey: "nominalId",
             });
         }
     }
     Transactions.init(
         {
             userId: DataTypes.STRING,
-            paymentId: DataTypes.STRING,
-            voucherId: DataTypes.STRING,
+            bankAccountId: DataTypes.INTEGER,
+            voucherId: DataTypes.INTEGER,
+            nominalId: DataTypes.INTEGER,
             tax: DataTypes.STRING,
             value: DataTypes.STRING,
             status: DataTypes.STRING,

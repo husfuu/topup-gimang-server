@@ -11,11 +11,11 @@ module.exports = {
             userId: {
                 type: Sequelize.STRING,
             },
-            paymentId: {
+            bankAccountId: {
                 type: Sequelize.INTEGER,
                 references: {
                     model: {
-                        tableName: "Payments",
+                        tableName: "BankAccounts",
                     },
                     key: "id",
                 },
@@ -25,6 +25,15 @@ module.exports = {
                 references: {
                     model: {
                         tableName: "Vouchers",
+                    },
+                    key: "id",
+                },
+            },
+            nominalId: {
+                type: Sequelize.INTEGER,
+                references: {
+                    model: {
+                        tableName: "Nominals",
                     },
                     key: "id",
                 },
