@@ -76,16 +76,14 @@ exports.updateTransactionStatusByAdmin = async (req, res) => {
             },
         );
 
+        req.flash("alertMessage", "Successfully edited Nominal");
+        req.flash("alertStatus", "success");
+
         res.redirect("/transactions");
     } catch (error) {
-        res.status(500).json({
-            status: "FAILED",
-            data: {
-                name: error.name,
-                message: error.message,
-                stack: error.stack,
-            },
-        });
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
+        res.redirect("/transactions");
     }
 };
 
@@ -123,11 +121,20 @@ exports.viewAllTransactions = async (req, res) => {
             include: [Vouchers, Nominals, BankAccounts],
         });
 
+        const alertMesage = req.flash("alertMessage");
+        const alertStatus = req.flash("alertStatus");
+
+        const alert = { message: alertMesage, status: alertStatus };
+
         res.render("admin/transactions/view_transaction", {
             title: "Transaction Page",
             transactions,
+            alert,
         });
     } catch (error) {
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
+
         res.redirect("/transactions");
     }
 };

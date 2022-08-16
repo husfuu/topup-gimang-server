@@ -212,11 +212,20 @@ exports.viewAllCategories = async (req, res) => {
     try {
         const categories = await Categories.findAll();
 
+        const alertMesage = req.flash("alertMessage");
+        const alertStatus = req.flash("alertStatus");
+
+        const alert = { message: alertMesage, status: alertStatus };
+
         res.render("admin/category/view_category", {
             title: "Category Page",
             categories,
+            alert,
         });
     } catch (error) {
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
+
         res.redirect("/category");
     }
 };
@@ -227,6 +236,8 @@ exports.viewCreateCategories = async (req, res) => {
             title: "Add Category",
         });
     } catch (error) {
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
         res.redirect("/categories");
     }
 };
@@ -241,6 +252,8 @@ exports.viewEditCategories = async (req, res) => {
             title: "Edit Category",
         });
     } catch (error) {
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
         res.redirect("/category");
     }
 };
@@ -249,21 +262,19 @@ exports.actionCreateCategories = async (req, res) => {
     try {
         const { name } = req.body;
 
-        if (!name) {
-            return res.status(401).json({
-                status: "FAILED",
-                data: {
-                    message: "please fill the category name",
-                },
-            });
-        }
-
-        const category = await Categories.create({
+        await Categories.create({
             name,
         });
 
+        req.flash("alertMessage", "Successfully added Category");
+        req.flash("alertStatus", "success");
+
         res.redirect("/categories");
-    } catch (error) {}
+    } catch (error) {
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
+        res.redirect("/categories");
+    }
 };
 
 exports.actionEditCategories = async (req, res) => {
@@ -283,14 +294,20 @@ exports.actionEditCategories = async (req, res) => {
             },
         );
 
+        req.flash("alertMessage", "Successfully edited Category");
+        req.flash("alertStatus", "success");
+
         res.redirect("/categories");
-    } catch (error) {}
+    } catch (error) {
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
+        res.redirect("/categories");
+    }
 };
 
 exports.actionDeleteCategories = async (req, res) => {
     try {
         const categoryId = req.params.id;
-        // const category = await Categories.findByPk(categoryId);
 
         await Categories.destroy({
             where: {
@@ -298,15 +315,13 @@ exports.actionDeleteCategories = async (req, res) => {
             },
         });
 
+        req.flash("alertMessage", "Successfully deleted Category");
+        req.flash("alertStatus", "success");
+
         res.redirect("/categories");
     } catch (error) {
-        res.status(500).json({
-            status: "FAILED",
-            data: {
-                name: error.name,
-                message: error.message,
-                stack: error.stack,
-            },
-        });
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
+        res.redirect("/categories");
     }
 };

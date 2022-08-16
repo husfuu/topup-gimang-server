@@ -258,11 +258,19 @@ exports.viewAllBankAccounts = async (req, res) => {
             include: Admins,
         });
 
+        const alertMesage = req.flash("alertMessage");
+        const alertStatus = req.flash("alertStatus");
+
+        const alert = { message: alertMesage, status: alertStatus };
+
         res.render("admin/bankAccount/view_bankAccount", {
             title: "Bank Account Page",
             bankAccounts,
         });
     } catch (error) {
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
+
         res.redirect("/bankaccounts");
     }
 };
@@ -273,6 +281,8 @@ exports.viewCreateBankAccount = async (req, res) => {
             title: "Add Bank Account",
         });
     } catch (error) {
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
         res.redirect("/bankaccounts");
     }
 };
@@ -290,6 +300,8 @@ exports.viewEditBankAccount = async (req, res) => {
             bankAccount,
         });
     } catch (error) {
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
         res.redirect("/bankaccounts");
     }
 };
@@ -308,8 +320,13 @@ exports.actionDeleteBankAccount = async (req, res) => {
             },
         });
 
+        req.flash("alertMessage", "Successfully deleted Nominal");
+        req.flash("alertStatus", "success");
+
         res.redirect("/bankaccounts");
     } catch (error) {
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
         res.redirect("/bankaccounts");
     }
 };

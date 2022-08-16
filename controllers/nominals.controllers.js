@@ -227,11 +227,19 @@ exports.viewAllNominals = async (req, res) => {
     try {
         const nominals = await Nominals.findAll();
 
+        const alertMesage = req.flash("alertMessage");
+        const alertStatus = req.flash("alertStatus");
+
+        const alert = { message: alertMesage, status: alertStatus };
+
         res.render("admin/nominal/view_nominal", {
             title: "Nominal Page",
             nominals,
+            alert,
         });
     } catch (error) {
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
         res.redirect("/nominals");
     }
 };
@@ -242,6 +250,8 @@ exports.viewCreateNominals = async (req, res) => {
             title: "Add Nominal",
         });
     } catch (error) {
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
         res.redirect("/nominals");
     }
 };
@@ -256,6 +266,8 @@ exports.viewEditNominals = async (req, res) => {
             title: "Edit Nominal",
         });
     } catch (error) {
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
         res.redirect("/nominals");
     }
 };
@@ -270,8 +282,15 @@ exports.actionCreateNominals = async (req, res) => {
             price,
         });
 
+        req.flash("alertMessage", "Successfully added Nominal");
+        req.flash("alertStatus", "success");
+
         res.redirect("/nominals");
-    } catch (error) {}
+    } catch (error) {
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
+        res.redirect("/nominals");
+    }
 };
 
 exports.actionEditNominals = async (req, res) => {
@@ -291,9 +310,15 @@ exports.actionEditNominals = async (req, res) => {
                 },
             },
         );
+        req.flash("alertMessage", "Successfully edited Nominal");
+        req.flash("alertStatus", "success");
 
         res.redirect("/nominals");
-    } catch (error) {}
+    } catch (error) {
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
+        res.redirect("/categories");
+    }
 };
 
 exports.actionDeleteNominals = async (req, res) => {
@@ -305,6 +330,14 @@ exports.actionDeleteNominals = async (req, res) => {
                 id: nominalId,
             },
         });
+
+        req.flash("alertMessage", "Successfully deleted Nominal");
+        req.flash("alertStatus", "success");
+
         res.redirect("/nominals");
-    } catch (error) {}
+    } catch (error) {
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
+        res.redirect("/nominals");
+    }
 };

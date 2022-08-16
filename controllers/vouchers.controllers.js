@@ -13,8 +13,7 @@ exports.createVoucher = async (req, res) => {
     const t = await sequelize.transaction();
 
     try {
-        const { userId, name, categoryId, nominalIds, status, thumbnail } =
-            req.body;
+        const { name, categoryId, nominalIds, status, thumbnail } = req.body;
 
         if (!name) {
             return res.status(401).json({
@@ -397,11 +396,20 @@ exports.viewAllVouchers = async (req, res) => {
         const vouchers = await Vouchers.findAll({
             include: [Categories, Nominals],
         });
+
+        const alertMesage = req.flash("alertMessage");
+        const alertStatus = req.flash("alertStatus");
+
+        const alert = { message: alertMesage, status: alertStatus };
+
         res.render("admin/voucher/view_voucher", {
             title: "Voucher Page",
             vouchers,
+            alert,
         });
     } catch (error) {
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
         res.redirect("/vouchers");
     }
 };
@@ -417,6 +425,8 @@ exports.viewCreateVouchers = async (req, res) => {
             nominals,
         });
     } catch (error) {
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
         res.redirect("/vouchers");
     }
 };
@@ -431,7 +441,7 @@ exports.viewEditVouchers = async (req, res) => {
             where: { id: voucherId },
             include: Nominals,
         });
-        // res.send(voucher);
+
         res.render("admin/voucher/edit_voucher", {
             title: "Edit Voucher",
             voucher,
@@ -439,6 +449,8 @@ exports.viewEditVouchers = async (req, res) => {
             nominals,
         });
     } catch (error) {
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
         res.redirect("/vouhcers");
     }
 };
@@ -446,8 +458,15 @@ exports.viewEditVouchers = async (req, res) => {
 exports.actionCreateVouchers = async (req, res) => {
     const t = await sequelize.transaction();
     try {
-        const { name, categoryId, nominalIds, status, thumbnail } = req.body;
+        let { name, categoryId, nominalIds, status, thumbnail } = req.body;
         // find all nominals based on nominalIds in Nominals Table
+
+        const lengthNominalIds = nominalIds.length;
+        console.log(lengthNominalIds);
+        if (lengthNominalIds == 1) {
+            nominalIds = Array.from(String(nominalIds), Number);
+        }
+        console.log(nominalIds);
         const selectedNominals = await Nominals.findAll(
             {
                 where: {
@@ -458,14 +477,14 @@ exports.actionCreateVouchers = async (req, res) => {
             },
             { transaction: t },
         );
-
+        console.log("ini jalan 1");
         const newVoucher = await Vouchers.create({
             name,
             categoryId,
             status,
             thumbnail,
         });
-
+        console.log("ini jalan 2");
         await newVoucher.addNominals(selectedNominals, {
             transaction: t,
             through: {
@@ -474,12 +493,18 @@ exports.actionCreateVouchers = async (req, res) => {
         });
 
         await t.commit();
+        console.log("ini jalan 3");
+        req.flash("alertMessage", "Successfully added Voucher");
+        req.flash("alertStatus", "success");
 
         res.redirect("/vouchers");
     } catch (error) {
-        console.log("error woyy");
         console.log(error);
+        res.send(error);
         await t.rollback();
+
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
         res.redirect("/vouchers");
     }
 };
@@ -520,16 +545,17 @@ exports.actionEditVouchers = async (req, res) => {
         );
 
         const updatedVoucher2 = await Vouchers.findByPk(voucherId);
-        console.log(updatedVoucher2);
-        res.send(updatedVoucher2);
+
         await updatedVoucher2.setNominal(nominalIds);
 
         await t.commit();
 
+        req.flash("alertMessage", "Successfully edited Voucher");
+        req.flash("alertStatus", "success");
+
         res.redirect("/vouchers");
     } catch (error) {
         await t.rollback();
-        console.log(error);
         res.send(error);
     }
 };
@@ -550,8 +576,13 @@ exports.actionDeleteVouchers = async (req, res) => {
             },
         });
 
+        req.flash("alertMessage", "Successfully deleted Voucher");
+        req.flash("alertStatus", "success");
+
         res.redirect("/vouchers");
     } catch (error) {
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
         res.redirect("/vouchers");
     }
 };
