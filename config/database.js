@@ -9,6 +9,7 @@ const {
     DATABASE_NAME_DEVELOPMENT,
     DATABASE_HOST,
     DATABASE_NAME_PRODUCTION,
+    DATABASE_PORT,
 } = process.env;
 
 module.exports = {
@@ -18,6 +19,7 @@ module.exports = {
         database: DATABASE_NAME_DEVELOPMENT,
         host: DATABASE_HOST,
         dialect: "postgres",
+        port: DATABASE_PORT,
     },
     test: {
         username: DATABASE_USERNAME,
@@ -32,6 +34,7 @@ module.exports = {
         database: DATABASE_NAME_PRODUCTION,
         host: DATABASE_HOST,
         dialect: "postgres",
+        port: DATABASE_PORT,
         dialectOptions: {
             ssl: {
                 require: true,
