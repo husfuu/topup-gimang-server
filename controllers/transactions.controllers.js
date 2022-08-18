@@ -139,5 +139,11 @@ exports.viewAllTransactions = async (req, res) => {
     }
 };
 
+exports.viewTotalSpentByCategory = async (req, res) => {
+    try {
+        // const
+    } catch (error) {}
+};
+
 // oleh user dan admin
 exports.getTransactionById = async (req, res) => {};
