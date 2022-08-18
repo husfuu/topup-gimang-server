@@ -18,7 +18,7 @@ const nominalRoutes = require("./routes/nominals.routes");
 const paymentRoutes = require("./routes/payments.routes");
 const roleRoutes = require("./routes/roles.routes");
 const transactionRoutes = require("./routes/transactions.routes");
-const userbiodataRoutes = require("./routes/userbiodatas.routes");
+// const userbiodataRoutes = require("./routes/userbiodatas.routes");
 const voucherRoutes = require("./routes/vouchers.routes");
 const checkoutRoutes = require("./routes/checkout.routes");
 
@@ -57,7 +57,7 @@ app.use(nominalRoutes);
 app.use(roleRoutes);
 app.use(paymentRoutes);
 app.use(transactionRoutes);
-app.use(userbiodataRoutes);
+// app.use(userbiodataRoutes);
 app.use(voucherRoutes);
 app.use(checkoutRoutes);
 
