@@ -4,7 +4,7 @@ const { Userbiodatas } = require("../models");
 exports.createUserbiodata = async (req, res) => {
     try {
         const {
-            userId, // sementara
+            // userId, // sementara
             username,
             fullName,
             phoneNumber,
