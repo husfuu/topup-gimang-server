@@ -1,0 +1,20 @@
+/**
+ * @file
+ * Sequelize manifest.
+ */
+
+/**
+ * Dependencies */
+const path = require("path");
+const dotenv = require("dotenv");
+
+/**
+ * Read .env file if it exists */
+dotenv.config();
+
+module.exports = {
+  config: path.join(__dirname, "config/database.js"),
+  "migrations-path": path.join(__dirname, "migrations"),
+  "models-path": path.join(__dirname, "models"),
+  "seeders-path": path.join(__dirname, "seeders"),
+};
