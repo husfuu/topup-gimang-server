@@ -1,12 +1,8 @@
 const router = require("express").Router();
 const userbiodatasController = require("../controllers/userbiodatas.controllers");
-const authorize = require("../middlewares/authorize");
+// const authorize = require("../middlewares/authorize");
 
-router.post(
-    "/api/v1/userbiodatas",
-    authorize,
-    userbiodatasController.createUserbiodata,
-);
+router.post("/api/v1/userbiodatas", userbiodatasController.createUserbiodata);
 // masih bingung implement jika 2 path dari 2 API sama
 router.get(
     "/api/v1/userbiodatas/",

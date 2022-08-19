@@ -13,12 +13,11 @@ dotenv.config();
 const admin = require("./routes/admins.routes");
 const bankRoutes = require("./routes/bankaccounts.routes");
 const categoryRoutes = require("./routes/categories.routes");
-// const dashboardRoutes = require('./routes/dashboards.routes');
+const dashboardRoutes = require("./routes/dashboard.routes");
 const nominalRoutes = require("./routes/nominals.routes");
 const paymentRoutes = require("./routes/payments.routes");
-const roleRoutes = require("./routes/roles.routes");
 const transactionRoutes = require("./routes/transactions.routes");
-// const userbiodataRoutes = require("./routes/userbiodatas.routes");
+const userbiodataRoutes = require("./routes/userbiodatas.routes");
 const voucherRoutes = require("./routes/vouchers.routes");
 const checkoutRoutes = require("./routes/checkout.routes");
 
@@ -56,11 +55,10 @@ app.use(admin);
 app.use(bankRoutes);
 app.use(categoryRoutes);
 app.use(nominalRoutes);
-// app.use(dashboardRoutes);
-app.use(roleRoutes);
+app.use(dashboardRoutes);
 app.use(paymentRoutes);
 app.use(transactionRoutes);
-// app.use(userbiodataRoutes);
+app.use(userbiodataRoutes);
 app.use(voucherRoutes);
 app.use(checkoutRoutes);
 

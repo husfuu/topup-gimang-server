@@ -17,9 +17,6 @@ module.exports = {
                     key: "id",
                 },
             },
-            userId: {
-                type: Sequelize.STRING,
-            },
             name: {
                 type: Sequelize.STRING,
             },

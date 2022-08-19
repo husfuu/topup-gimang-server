@@ -26,7 +26,6 @@ module.exports = (sequelize, DataTypes) => {
     Vouchers.init(
         {
             categoryId: DataTypes.STRING,
-            userId: DataTypes.STRING,
             name: DataTypes.STRING,
             status: DataTypes.STRING,
             thumbnail: DataTypes.STRING,

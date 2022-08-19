@@ -266,6 +266,7 @@ exports.viewAllBankAccounts = async (req, res) => {
         res.render("admin/bankAccount/view_bankAccount", {
             title: "Bank Account Page",
             bankAccounts,
+            alert,
         });
     } catch (error) {
         req.flash("alertMessage", `${error.message}`);
