@@ -4,7 +4,8 @@
     "private": true,
     "scripts": {
         "start": "node ./bin/www",
-        "dev": "nodemon ./bin/www",
+        "dev": "env-cmd -f ./.env.local nodemon ./bin/www",
+        "pro": "env-cmd -f ./.env nodemon ./bin/www",
         "test": "jest"
     },
     "jest": {
@@ -19,6 +20,7 @@
         "debug": "~2.6.9",
         "dotenv": "^16.0.1",
         "ejs": "^3.1.8",
+        "env-cmd": "^10.1.0",
         "express": "~4.16.1",
         "express-session": "^1.17.3",
         "firebase-admin": "^11.0.0",

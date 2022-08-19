@@ -1,40 +1,40 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
-console.log(dotenv);
-
 const {
-    DATABASE_USERNAME,
-    DATABASE_PASSWORD,
-    DATABASE_NAME_DEVELOPMENT,
-    DATABASE_HOST,
-    DATABASE_NAME_PRODUCTION,
-    DATABASE_PORT,
+    DB_USERNAME_PROD,
+    DB_PASSWORD_PROD,
+    DB_NAME_PROD,
+    DB_HOST_PROD,
+    DB_PORT,
+    DB_USERNAME_DEV,
+    DB_PASSWORD_DEV,
+    DB_NAME_DEV,
+    DB_HOST_DEV,
 } = process.env;
 
 module.exports = {
     development: {
-        username: DATABASE_USERNAME,
-        password: DATABASE_PASSWORD,
-        database: DATABASE_NAME_DEVELOPMENT,
-        host: DATABASE_HOST,
+        username: DB_USERNAME_DEV,
+        password: DB_PASSWORD_DEV,
+        database: DB_NAME_DEV,
+        host: DB_HOST_DEV,
         dialect: "postgres",
-        port: DATABASE_PORT,
     },
     test: {
-        username: DATABASE_USERNAME,
-        password: DATABASE_PASSWORD,
-        database: DATABASE_NAME_DEVELOPMENT,
-        host: DATABASE_HOST,
+        username: "husfuu",
+        password: "husfuuPass",
+        database: "topup-gimang_test",
+        host: "127.0.0.1",
         dialect: "postgres",
     },
     production: {
-        username: DATABASE_USERNAME,
-        password: DATABASE_PASSWORD,
-        database: DATABASE_NAME_PRODUCTION,
-        host: DATABASE_HOST,
+        username: DB_USERNAME_PROD,
+        password: DB_PASSWORD_PROD,
+        database: DB_NAME_PROD,
+        host: DB_HOST_PROD,
         dialect: "postgres",
-        port: DATABASE_PORT,
+        port: DB_PORT,
         dialectOptions: {
             ssl: {
                 require: true,
