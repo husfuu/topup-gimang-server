@@ -1,11 +1,11 @@
-<%- include ../../partials/header.ejs %>
-<%- include ../../partials/navbar.ejs %>
-<%- include ../../partials/sidebar.ejs %>
+<%- include ("../../partials/header") %>
+<%- include ("../../partials/navbar") %>
+<%- include ("../../partials/sidebar") %>
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
   <section class="content-header">
     <div class="container-fluid">
-      <%- include ../../partials/message.ejs %>
+      <%- include ("../../partials/message") %>
       <div class="row mb-2">
         <div class="col-sm-6">
           <h1>Bank</h1>
@@ -36,7 +36,7 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <%- include ./table_bankAccount.ejs %>
+              <%- include ("./table_bankAccount") %>
             </div>
             <!-- /.card-body -->
           </div>
@@ -52,5 +52,5 @@
   <!-- /.content -->
 </div>
 
-<%- include ../../partials/footer.ejs %>
-<%- include ../../partials/js.ejs %>
+<%- include ("../../partials/footer") %>
+<%- include ("../../partials/js") %>
