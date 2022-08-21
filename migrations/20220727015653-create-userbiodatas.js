@@ -10,7 +10,13 @@ module.exports = {
                 type: Sequelize.INTEGER,
             },
             userId: {
-                type: Sequelize.STRING,
+                type: Sequelize.UUID,
+                references: {
+                    model: {
+                        tableName: "Users",
+                    },
+                    key: "id",
+                },
             },
             username: {
                 type: Sequelize.STRING,
