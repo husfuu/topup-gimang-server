@@ -24,7 +24,7 @@
             <% } %>
           </td>
           <td>
-            <form action="/payments/status/<%= payments[i].id %>?_method=PUT" method="POST" style="display: inline-block;">
+            <form action="/payments/status/<%= payments[i].id %>" method="POST" style="display: inline-block;">
               <button class="btn btn-primary btn-sm">
                 <i class="fas fa-folder"></i>
                 <% if(payments[i].status === 'Y') { %>

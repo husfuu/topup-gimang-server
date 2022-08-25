@@ -1,23 +1,35 @@
 const router = require("express").Router();
 const categoryController = require("../controllers/categories.controllers");
-
-router.post("/api/v1/categories", categoryController.createCategory);
-router.get("/api/v1/categories", categoryController.getAllCategories);
-router.get("/api/v1/categories/:id", categoryController.getCategoryById);
-router.put("/api/v1/categories/:id", categoryController.updateCategoryById);
-router.delete("/api/v1/categories/:id", categoryController.deleteCategoryById);
+const isLoginAdmin = require("../middlewares/auth");
 
 // view
-router.get("/categories", categoryController.viewAllCategories);
-router.get("/categories/create", categoryController.viewCreateCategories);
-router.get("/categories/edit/:id", categoryController.viewEditCategories);
+router.get("/categories", isLoginAdmin, categoryController.viewAllCategories);
+router.get(
+    "/categories/create",
+    isLoginAdmin,
+    categoryController.viewCreateCategories,
+);
+router.get(
+    "/categories/edit/:id",
+    isLoginAdmin,
+    categoryController.viewEditCategories,
+);
 
 // actions
-router.post("/categories/create", categoryController.actionCreateCategories);
+router.post(
+    "/categories/create",
+    isLoginAdmin,
+    categoryController.actionCreateCategories,
+);
 router.post(
     "/categories/delete/:id",
+    isLoginAdmin,
     categoryController.actionDeleteCategories,
 );
-router.post("/categories/edit/:id", categoryController.actionEditCategories);
+router.post(
+    "/categories/edit/:id",
+    isLoginAdmin,
+    categoryController.actionEditCategories,
+);
 
 module.exports = router;

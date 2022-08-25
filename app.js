@@ -9,8 +9,9 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 // ROUTES
-// const indexRouter = require('./routes/index');
-const admin = require("./routes/admins.routes");
+const authRoutes = require("./routes/auth.routes");
+const adminRoutes = require("./routes/admins.routes");
+const adminAuthRoutes = require("./routes/adminAuth.routes");
 const bankRoutes = require("./routes/bankaccounts.routes");
 const categoryRoutes = require("./routes/categories.routes");
 const dashboardRoutes = require("./routes/dashboard.routes");
@@ -31,11 +32,8 @@ app.use(
     session({
         secret: "keyboard cat",
         resave: false,
-        saveUninitialized: false,
-        cookie: {
-            secure: true,
-            maxAge: 60000,
-        },
+        saveUninitialized: true,
+        cookie: {},
     }),
 );
 app.use(flash());
@@ -51,7 +49,9 @@ app.use(
 
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
-app.use(admin);
+app.use(authRoutes);
+app.use(adminAuthRoutes);
+app.use(adminRoutes);
 app.use(bankRoutes);
 app.use(categoryRoutes);
 app.use(nominalRoutes);

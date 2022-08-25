@@ -128,6 +128,7 @@ exports.viewAllTransactions = async (req, res) => {
 
         res.render("admin/transactions/view_transaction", {
             title: "Transaction Page",
+            name: req.session.user.name,
             transactions,
             alert,
         });

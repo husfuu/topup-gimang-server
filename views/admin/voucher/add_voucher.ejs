@@ -31,7 +31,7 @@
             </div>
             <!-- /.card-header -->
             <!-- form start -->
-            <form action="/vouchers/create" method="POST">
+            <form action="/vouchers/create" method="POST" enctype="multipart/form-data">
               <div class="card-body">
                 <div class="form-group">
                   <label for="name">Nama game</label>
@@ -61,6 +61,12 @@
                       <% }) %>
                     </select>
                   </div>
+                </div>
+                <div class="form-group">
+                  <label for="image">Gambar</label>
+                  <input type="file" name="image" class="form-control" id="image" placeholder="Masukan gambar">
+                  <br >
+                  <img src="" id="perview"> 
                 </div>
               </div>
               <div class="card-footer">

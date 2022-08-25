@@ -1,22 +1,15 @@
 "use strict";
+const bcrypt = require("bcryptjs");
+const salt = bcrypt.genSaltSync(10);
 
 module.exports = {
     async up(queryInterface, Sequelize) {
-        /**
-         * Add seed commands here.
-         *
-         * Example:
-         * await queryInterface.bulkInsert('People', [{
-         *   name: 'John Doe',
-         *   isBetaMember: false
-         * }], {});
-         */
         await queryInterface.bulkInsert("Admins", [
             {
                 id: 1,
                 fullName: "M. Husni Nur Fadillah",
                 email: "husfuudev@gmail.com",
-                password: "husniPass",
+                password: bcrypt.hashSync("husniPass", salt),
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
@@ -24,7 +17,7 @@ module.exports = {
                 id: 2,
                 fullName: "Rifaa Dhiyaa Zahroo",
                 email: "caramewln@gmail.com",
-                password: "rifaaPass",
+                password: bcrypt.hashSync("rifaaPass", salt),
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
@@ -32,11 +25,6 @@ module.exports = {
     },
 
     async down(queryInterface, Sequelize) {
-        /**
-         * Add commands to revert seed here.
-         *
-         * Example:
-         * await queryInterface.bulkDelete('People', null, {});
-         */
+        await queryInterface.bulkDelete("Admins", null, {});
     },
 };

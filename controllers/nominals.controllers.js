@@ -1,77 +1,5 @@
 const { Nominals } = require("../models");
 
-exports.createNominal = async (req, res) => {
-    try {
-        const { coinName, coinQuantity, price } = req.body;
-
-        if (!coinName) {
-            return res.status(401).json({
-                status: "FAILED",
-                data: {
-                    message: "please fill the coin name",
-                },
-            });
-        }
-
-        if (!coinQuantity) {
-            return res.status(401).json({
-                status: "FAILED",
-                data: {
-                    message: "please fill the coin quantity",
-                },
-            });
-        }
-
-        if (!price) {
-            return res.status(401).json({
-                status: "FAILED",
-                data: {
-                    message: "please fill the price",
-                },
-            });
-        }
-
-        const nominalExist = await Nominals.findOne({
-            where: {
-                coinName,
-                coinQuantity,
-            },
-        });
-
-        if (nominalExist) {
-            return res.status(401).json({
-                status: "FAILED",
-                data: {
-                    message: "the nominal is already exist",
-                },
-            });
-        }
-
-        const nominal = await Nominals.create({
-            coinName,
-            coinQuantity,
-            price,
-        });
-
-        res.status(201).json({
-            status: "SUCCESS",
-            data: {
-                message: `Successfully created nominal`,
-                nominal,
-            },
-        });
-    } catch (error) {
-        res.status(500).json({
-            status: "FAILED",
-            data: {
-                name: error.name,
-                message: error.message,
-                stack: error.stack,
-            },
-        });
-    }
-};
-
 exports.getAllNominal = async (req, res) => {
     try {
         const nominals = await Nominals.findAll();
@@ -138,91 +66,6 @@ exports.getNominalById = async (req, res) => {
     }
 };
 
-exports.updateNominalById = async (req, res) => {
-    try {
-        const nominalId = req.params.id;
-        const nominal = await Nominals.findByPk(nominalId);
-
-        if (!nominal) {
-            return res.status(401).json({
-                status: "FAILED",
-                data: {
-                    message: `nominal with ${id} is not found`,
-                },
-            });
-        }
-
-        const { coinName, coinQuantity } = req.body;
-
-        await Nominals.update(
-            {
-                coinName,
-                coinQuantity,
-            },
-            {
-                where: {
-                    id: nominalId,
-                },
-            },
-        );
-
-        res.status(201).json({
-            data: {
-                message: `Succesfully update nominal with id ${nominalId}`,
-            },
-        });
-    } catch (error) {
-        res.status(500).json({
-            status: "FAILED",
-            data: {
-                name: error.name,
-                message: error.message,
-                stack: error.stack,
-            },
-        });
-    }
-};
-
-exports.deleteNominalById = async (req, res) => {
-    try {
-        const nominalId = req.params.id;
-        const nominal = await Nominals.findByPk(nominalId);
-
-        if (!nominal) {
-            return res.status(401).json({
-                status: "FAILED",
-                data: {
-                    message: `Nominal with id ${nominalId} is not found`,
-                },
-            });
-        }
-
-        await Nominals.destroy({
-            where: {
-                id: nominalId,
-            },
-        });
-
-        res.status(201).json({
-            status: "SUCCESS",
-            data: {
-                message: `Successfully delete nominal with id ${nominalId}`,
-            },
-        });
-    } catch (error) {
-        res.status(500).json({
-            status: "FAILED",
-            data: {
-                name: error.name,
-                message: error.message,
-                stack: error.stack,
-            },
-        });
-    }
-};
-
-// ==================================
-
 exports.viewAllNominals = async (req, res) => {
     try {
         const nominals = await Nominals.findAll();
@@ -234,6 +77,7 @@ exports.viewAllNominals = async (req, res) => {
 
         res.render("admin/nominal/view_nominal", {
             title: "Nominal Page",
+            name: req.session.user.name,
             nominals,
             alert,
         });
@@ -248,6 +92,7 @@ exports.viewCreateNominals = async (req, res) => {
     try {
         res.render("admin/nominal/add_nominal", {
             title: "Add Nominal",
+            name: req.session.user.name,
         });
     } catch (error) {
         req.flash("alertMessage", `${error.message}`);
@@ -264,6 +109,7 @@ exports.viewEditNominals = async (req, res) => {
         res.render("admin/nominal/edit_nominal", {
             nominal,
             title: "Edit Nominal",
+            name: req.session.user.name,
         });
     } catch (error) {
         req.flash("alertMessage", `${error.message}`);
@@ -287,9 +133,21 @@ exports.actionCreateNominals = async (req, res) => {
 
         res.redirect("/nominals");
     } catch (error) {
-        req.flash("alertMessage", `${error.message}`);
-        req.flash("alertStatus", "danger");
-        res.redirect("/nominals");
+        res.status(500).json({
+            status: "FAILED",
+            data: {
+                name: error.name,
+                message: error.message,
+                stack: error.stack,
+            },
+        });
+        console.log(error.name);
+        console.log(error.message);
+        console.log(error.stack);
+        res.send(error);
+        // req.flash("alertMessage", `${error.message}`);
+        // req.flash("alertStatus", "danger");
+        // res.redirect("/nominals");
     }
 };
 

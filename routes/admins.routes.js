@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const adminControllers = require("../controllers/admins.controllers");
+const isLoginAdmin = require("../middlewares/auth");
 
-router.post("/api/v1/admins", adminControllers.createAdmin);
-router.delete("/api/v1/admins/:id", adminControllers.deleteAdminById);
+router.get("/admins", isLoginAdmin, adminControllers.viewAllAdmins);
 
 module.exports = router;

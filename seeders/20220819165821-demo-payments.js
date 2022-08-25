@@ -15,7 +15,7 @@ module.exports = {
             {
                 id: 1,
                 type: "transfer",
-                status: "active",
+                status: "N",
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },

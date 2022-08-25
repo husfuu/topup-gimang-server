@@ -7,128 +7,11 @@ const {
     Sequelize,
 } = require("../models");
 
+const path = require("path");
+const fs = require("fs");
+const config = require("../config");
+
 const Op = Sequelize.Op;
-
-exports.createVoucher = async (req, res) => {
-    const t = await sequelize.transaction();
-
-    try {
-        const { name, categoryId, nominalIds, status, thumbnail } = req.body;
-
-        if (!name) {
-            return res.status(401).json({
-                status: "FAILED",
-                data: {
-                    message: "please fill the name",
-                },
-            });
-        }
-
-        if (!categoryId) {
-            return res.status(401).json({
-                status: "FAILED",
-                data: {
-                    message: "please fill the categoryId",
-                },
-            });
-        }
-
-        if (!nominalIds) {
-            return res.status(401).json({
-                status: "FAILED",
-                data: {
-                    message: "please fill the nominalIds",
-                },
-            });
-        }
-
-        if (!status) {
-            return res.status(401).json({
-                status: "FAILED",
-                data: {
-                    message: "please fill the status",
-                },
-            });
-        }
-
-        if (!thumbnail) {
-            return res.status(401).json({
-                status: "FAILED",
-                data: {
-                    message: "please fill the thumbnail",
-                },
-            });
-        }
-
-        // validate (find) the category that given by user based on categoryId in
-        // Categories Table
-        const selectedCategoryId = await Categories.findByPk(categoryId);
-
-        if (!selectedCategoryId) {
-            return res.status(401).json({
-                status: "FAILED",
-                data: {
-                    message: `category with id = ${categoryId} is not found!`,
-                },
-            });
-        }
-
-        // find all nominals based on nominalIds in Nominals Table
-        const selectedNominals = await Nominals.findAll(
-            {
-                where: {
-                    id: {
-                        [Op.in]: nominalIds,
-                    },
-                },
-            },
-            { transaction: t },
-        );
-
-        const newVoucher = await Vouchers.create({
-            name,
-            categoryId,
-            status,
-            thumbnail,
-        });
-
-        if (!newVoucher) {
-            return res.status(401).json({
-                status: "FAILED",
-                data: {
-                    message: "Voucher failed to created!",
-                    newVoucher,
-                },
-            });
-        }
-
-        await newVoucher.addNominals(selectedNominals, {
-            transaction: t,
-            through: {
-                voucherId: newVoucher.id,
-            },
-        });
-
-        await t.commit();
-
-        res.status(201).json({
-            status: "SUCCESS",
-            data: {
-                message: "New Voucher successfully created!",
-            },
-        });
-    } catch (error) {
-        await t.rollback();
-        res.status(500).json({
-            status: "FAILED",
-            data: {
-                name: error.name,
-                message: error.message,
-                stack: error.stack,
-            },
-        });
-    }
-};
 
 exports.getAllVouchers = async (req, res) => {
     try {
@@ -202,195 +85,6 @@ exports.getVoucherById = async (req, res) => {
     }
 };
 
-exports.updateVoucherById = async (req, res) => {
-    const t = await sequelize.transaction();
-
-    try {
-        const voucherId = req.params.id;
-        const voucher = await Vouchers.findByPk(voucherId);
-
-        const { userId, name, categoryId, nominalIds, status, thumbnail } =
-            req.body;
-
-        if (!voucher) {
-            return res.status(401).json({
-                status: "FAILED",
-                data: {
-                    message: `voucher with id = ${voucherId}! is not found!`,
-                },
-            });
-        }
-
-        if (!name) {
-            return res.status(401).json({
-                status: "FAILED",
-                data: {
-                    message: "please fill the name",
-                },
-            });
-        }
-
-        if (!categoryId) {
-            return res.status(401).json({
-                status: "FAILED",
-                data: {
-                    message: "please fill the categoryId",
-                },
-            });
-        }
-
-        if (!nominalIds) {
-            return res.status(401).json({
-                status: "FAILED",
-                data: {
-                    message: "please fill the nominalIds",
-                },
-            });
-        }
-
-        if (!status) {
-            return res.status(401).json({
-                status: "FAILED",
-                data: {
-                    message: "please fill the status",
-                },
-            });
-        }
-
-        if (!thumbnail) {
-            return res.status(401).json({
-                status: "FAILED",
-                data: {
-                    message: "please fill the thumbnail",
-                },
-            });
-        }
-
-        const selectedCategoryId = await Categories.findByPk(categoryId);
-
-        if (!selectedCategoryId) {
-            return res.status(401).json({
-                status: "FAILED",
-                data: {
-                    message: `category with id = ${categoryId} is not found!`,
-                },
-            });
-        }
-
-        const selectedNominals = await Nominals.findAll(
-            {
-                where: {
-                    id: {
-                        [Op.in]: nominalIds,
-                    },
-                },
-            },
-            { transaction: t },
-        );
-
-        const updatedVoucher = await Vouchers.update(
-            {
-                name,
-                categoryId,
-                nominalIds,
-                status,
-                thumbnail,
-            },
-            {
-                where: { id: voucherId },
-            },
-        );
-
-        const updatedVoucher2 = Vouchers.findOne({
-            where: { id: voucherId },
-            include: [Categories, Nominals],
-        });
-
-        console.log(updatedVoucher);
-
-        await updatedVoucher2.setNominals(nominalIds);
-
-        // await updatedVoucher.updateNominals(
-        //     selectedNominals,
-        //     {
-        //         transaction: t,
-        //         through: {
-        //             voucherId: updatedVoucher.id
-        //         }
-        //     }
-        // );
-
-        await t.commit();
-
-        res.status(201).json({
-            status: "SUCCESS",
-            data: {
-                message: "New Voucher successfully created!",
-            },
-        });
-    } catch (error) {
-        await t.rollback();
-        res.status(500).json({
-            status: "FAILED",
-            data: {
-                name: error.name,
-                message: error.message,
-                stack: error.stack,
-            },
-        });
-    }
-};
-
-exports.deleteVoucherById = async (req, res) => {
-    try {
-        const voucherId = req.params.id;
-        const voucher = await Vouchers.findByPk(voucherId);
-
-        if (!voucher) {
-            return res.status(401).json({
-                status: "FAILED",
-                data: {
-                    message: `voucher with id = ${voucherId} is not found`,
-                },
-            });
-        }
-
-        // const nominalIds = await NominalVouchers.findAll({
-        //     where: { voucherId: voucherId },
-        //     attributes: ['nominalId']
-        // })
-
-        await NominalVouchers.destroy({
-            where: {
-                voucherId,
-            },
-        });
-
-        await Vouchers.destroy({
-            where: {
-                id: voucherId,
-            },
-        });
-
-        res.status(201).json({
-            status: "SUCCESS",
-            data: {
-                message: `Succesfully delete Voucher with id = ${voucherId}`,
-            },
-        });
-    } catch (error) {
-        res.status(500).json({
-            status: "FAILED",
-            data: {
-                name: error.name,
-                message: error.message,
-                stack: error.stack,
-            },
-        });
-    }
-};
-
-// ========================================================================
 exports.viewAllVouchers = async (req, res) => {
     try {
         const vouchers = await Vouchers.findAll({
@@ -404,6 +98,7 @@ exports.viewAllVouchers = async (req, res) => {
 
         res.render("admin/voucher/view_voucher", {
             title: "Voucher Page",
+            name: req.session.user.name,
             vouchers,
             alert,
         });
@@ -421,6 +116,7 @@ exports.viewCreateVouchers = async (req, res) => {
 
         res.render("admin/voucher/add_voucher", {
             title: "Add Voucher",
+            name: req.session.user.name,
             categories,
             nominals,
         });
@@ -444,6 +140,7 @@ exports.viewEditVouchers = async (req, res) => {
 
         res.render("admin/voucher/edit_voucher", {
             title: "Edit Voucher",
+            name: req.session.user.name,
             voucher,
             categories,
             nominals,
@@ -458,15 +155,14 @@ exports.viewEditVouchers = async (req, res) => {
 exports.actionCreateVouchers = async (req, res) => {
     const t = await sequelize.transaction();
     try {
-        let { name, categoryId, nominalIds, status, thumbnail } = req.body;
+        let { name, categoryId, nominalIds } = req.body;
         // find all nominals based on nominalIds in Nominals Table
-
         const lengthNominalIds = nominalIds.length;
-        console.log(lengthNominalIds);
+
         if (lengthNominalIds == 1) {
             nominalIds = Array.from(String(nominalIds), Number);
         }
-        console.log(nominalIds);
+
         const selectedNominals = await Nominals.findAll(
             {
                 where: {
@@ -477,27 +173,70 @@ exports.actionCreateVouchers = async (req, res) => {
             },
             { transaction: t },
         );
-        console.log("ini jalan 1");
-        const newVoucher = await Vouchers.create({
-            name,
-            categoryId,
-            status,
-            thumbnail,
-        });
-        console.log("ini jalan 2");
-        await newVoucher.addNominals(selectedNominals, {
-            transaction: t,
-            through: {
-                voucherId: newVoucher.id,
-            },
-        });
 
-        await t.commit();
-        console.log("ini jalan 3");
-        req.flash("alertMessage", "Successfully added Voucher");
-        req.flash("alertStatus", "success");
+        if (req.file) {
+            let tmp_path = req.file.path;
+            let originaExt =
+                req.file.originalname.split(".")[
+                    req.file.originalname.split(".").length - 1
+                ];
+            let filename = req.file.filename + "." + originaExt;
+            let target_path = path.resolve(
+                config.rootPath,
+                `public/uploads/${filename}`,
+            );
 
-        res.redirect("/vouchers");
+            const src = fs.createReadStream(tmp_path);
+            const dest = fs.createWriteStream(target_path);
+
+            src.pipe(dest);
+
+            src.on("end", async () => {
+                try {
+                    const newVoucher = await Vouchers.create({
+                        name,
+                        categoryId,
+                        status: "Y",
+                        thumbnail: filename,
+                    });
+
+                    await newVoucher.addNominals(selectedNominals, {
+                        transaction: t,
+                        through: {
+                            voucherId: newVoucher.id,
+                        },
+                    });
+
+                    await t.commit();
+                    res.redirect("/vouchers");
+                    req.flash("alertMessage", "Successfully added Voucher");
+                    req.flash("alertStatus", "success");
+                } catch (error) {
+                    req.flash("alertMessage", `${error.message}`);
+                    req.flash("alertStatus", "danger");
+                    res.redirect("/vouchers");
+                }
+            });
+        } else {
+            const newVoucher = await Vouchers.create({
+                name,
+                categoryId,
+                status: "Y",
+            });
+
+            await newVoucher.addNominals(selectedNominals, {
+                transaction: t,
+                through: {
+                    voucherId: newVoucher.id,
+                },
+            });
+
+            await t.commit();
+
+            res.redirect("/vouchers");
+            req.flash("alertMessage", "Successfully added Voucher");
+            req.flash("alertStatus", "success");
+        }
     } catch (error) {
         console.log(error);
         res.send(error);
@@ -556,7 +295,36 @@ exports.actionEditVouchers = async (req, res) => {
         res.redirect("/vouchers");
     } catch (error) {
         await t.rollback();
-        res.send(error);
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
+        res.redirect("/vouchers");
+    }
+};
+
+exports.actionEditStatusVouchers = async (req, res) => {
+    try {
+        const voucherId = req.params.id;
+        const voucher = await Vouchers.findOne({
+            where: { id: voucherId },
+        });
+        let status = voucher.status === "Y" ? "N" : "Y";
+
+        await Vouchers.update(
+            {
+                status,
+            },
+            {
+                where: { id: voucherId },
+            },
+        );
+        req.flash("alertMessage", "Successfully edited Voucher");
+        req.flash("alertStatus", "success");
+
+        res.redirect("/vouchers");
+    } catch (error) {
+        req.flash("alertMessage", `${error.message}`);
+        req.flash("alertStatus", "danger");
+        res.redirect("/vouchers");
     }
 };
 

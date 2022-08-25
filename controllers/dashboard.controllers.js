@@ -14,6 +14,7 @@ exports.viewDashboard = async (req, res) => {
 
         res.render("./admin/dashboard/view", {
             title: "Dashboard Page",
+            name: req.session.user.name,
             countTransactions,
             countVouchers,
             countCategories,

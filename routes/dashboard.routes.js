@@ -1,6 +1,9 @@
 const router = require("express").Router();
 const dashboardController = require("../controllers/dashboard.controllers");
 
-router.get("/", dashboardController.viewDashboard);
+const isLoginAdmin = require("../middlewares/auth");
+
+// router.use(isLoginAdmin);
+router.get("/", isLoginAdmin, dashboardController.viewDashboard);
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const transactionController = require("../controllers/transactions.controllers");
+const isLoginAdmin = require("../middlewares/auth");
 
 router.get("/api/v1/transactions/", transactionController.getAllTransactions);
 router.post(
@@ -8,10 +9,15 @@ router.post(
 );
 
 // ADMIN
-router.get("/transactions/", transactionController.viewAllTransactions);
+router.get(
+    "/transactions/",
+    isLoginAdmin,
+    transactionController.viewAllTransactions,
+);
 
 router.post(
     "/transactions/status/:id",
+    isLoginAdmin,
     transactionController.updateTransactionStatusByAdmin,
 );
 
