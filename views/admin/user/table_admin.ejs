@@ -1,0 +1,18 @@
+<table id="example2" class="table table-bordered table-hover">
+    <thead>
+    <tr>
+      <th>No.</th>
+      <th>Nama</th>
+      <th>Email</th>
+    </tr>
+    </thead>
+    <tbody>
+      <% for(let i = 0; i < admins.length; i++){ %>
+        <tr>
+          <td><%= i + 1 %></td>
+          <td><%= admins[i].fullName %></td>
+          <td><%= admins[i].email %></td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
