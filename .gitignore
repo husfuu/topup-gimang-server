@@ -1,6 +1,5 @@
 node_modules
 .vscode
-test
-babel.config.json
 .env
 .env.local
+test
