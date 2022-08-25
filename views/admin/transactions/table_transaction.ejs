@@ -2,7 +2,7 @@
     <thead>
       <tr>
         <th>No.</th>
-        <th>Nama game</th>
+        <th>Game</th>
         <th>Item</th>
         <th>Total harga</th>
         <th>Status</th>
@@ -15,10 +15,14 @@
         <tr>
           <td>
             <%= i + 1 %>
-          </td>
-  
+          </td>  
           <td>
-            <%= transactions[i]?.Voucher.name %>  
+            <ul class="list-inline">
+              <li class="list-inline-item ">
+                <img width="100%" height="200px" src="https://topup-gimang-server.herokuapp.com/uploads/<%= transactions[i]?.Voucher.thumbnail %> " alt="">
+                <p class="text-bold" ><%= transactions[i]?.Voucher.name %></p>  
+              </li>
+            </ul>
           </td>
           <td>
             <%= transactions[i]?.Nominal.coinName %>
