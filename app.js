@@ -21,6 +21,7 @@ const transactionRoutes = require("./routes/transactions.routes");
 const userbiodataRoutes = require("./routes/userbiodatas.routes");
 const voucherRoutes = require("./routes/vouchers.routes");
 const checkoutRoutes = require("./routes/checkout.routes");
+const cors = require("cors");
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.use(
     "/adminlte",
     express.static(path.join(__dirname, "/node_modules/admin-lte/")),
 );
+app.use(cors());
 
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
