@@ -6,6 +6,7 @@ const logger = require("morgan");
 const session = require("express-session");
 const flash = require("connect-flash");
 const dotenv = require("dotenv");
+const cors = require("cors");
 
 dotenv.config();
 // ROUTES
@@ -21,7 +22,6 @@ const transactionRoutes = require("./routes/transactions.routes");
 const userbiodataRoutes = require("./routes/userbiodatas.routes");
 const voucherRoutes = require("./routes/vouchers.routes");
 const checkoutRoutes = require("./routes/checkout.routes");
-const cors = require("cors");
 
 const app = express();
 
@@ -49,7 +49,6 @@ app.use(
 );
 app.use(cors());
 
-// app.use('/', indexRouter);
 // app.use('/users', usersRouter);
 app.use(authRoutes);
 app.use(adminAuthRoutes);
