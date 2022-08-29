@@ -126,15 +126,18 @@ exports.signIn = async (req, res, next) => {
                     JWT_KEY,
                 );
                 res.status(200).json({
+                    status: "SUCCESS",
                     data: { token },
                 });
             } else {
                 res.status(403).json({
+                    status: "FAILED",
                     message: "your password is false",
                 });
             }
         } else {
             res.status(403).json({
+                status: "FAILED",
                 message: "your email is not registered",
             });
         }
