@@ -6,7 +6,7 @@ dotenv.config();
 
 const { JWT_KEY } = process.env;
 
-exports.signUp = async (req, res) => {
+exports.signUp = async (req, res, next) => {
     try {
         const { email, password, fullName, phoneNumber } = req.body;
 
@@ -86,46 +86,67 @@ exports.signUp = async (req, res) => {
     }
 };
 
-exports.signIn = async (req, res) => {
+exports.signIn = async (req, res, next) => {
     const { email, password } = req.body;
 
-    await Users.findOne({ where: { email } })
-        .then((player) => {
-            if (player) {
-                const checkPassword = bcrypt.compareSync(
-                    password,
-                    player.password,
-                );
-                if (checkPassword) {
-                    const token = jwt.sign(
-                        {
-                            player: {
-                                id: player.id,
-                                email: player.email,
-                            },
-                        },
-                        JWT_KEY,
-                    );
+    try {
+        if (!email) {
+            return res.status(401).json({
+                status: "FAILED",
+                data: {
+                    message: "please fill email",
+                },
+            });
+        }
 
-                    res.status(200).json({
-                        data: { token },
-                    });
-                } else {
-                    res.status(403).json({
-                        message: "your password is false",
-                    });
-                }
+        if (!password) {
+            return res.status(401).json({
+                status: "FAILED",
+                data: {
+                    message: "please fill password",
+                },
+            });
+        }
+
+        const player = await Users.findOne({
+            where: { email },
+        });
+
+        if (player) {
+            const checkPassword = bcrypt.compareSync(password, player.password);
+
+            if (checkPassword) {
+                const token = jwt.sign(
+                    {
+                        player: {
+                            id: player.id,
+                            email: player.email,
+                        },
+                    },
+                    JWT_KEY,
+                );
+                res.status(200).json({
+                    data: { token },
+                });
             } else {
                 res.status(403).json({
-                    message: "your email is not registered",
+                    message: "your password is false",
                 });
             }
-        })
-        .catch((error) => {
-            res.status(500).json({
-                message: error.message || `Internal server error`,
+        } else {
+            res.status(403).json({
+                message: "your email is not registered",
             });
-
-            next();
+        }
+    } catch (error) {
+        res.status(500).json({
+            status: "FAILED",
+            data: {
+                name: error.name,
+                message: error.message,
+                stack: error.stack,
+            },
         });
+        next(error);
+    }
 };
