@@ -127,18 +127,25 @@ exports.signIn = async (req, res, next) => {
                 );
                 res.status(200).json({
                     status: "SUCCESS",
-                    data: { token },
+                    data: {
+                        message: "your account is successfully logged in",
+                        token,
+                    },
                 });
             } else {
                 res.status(403).json({
                     status: "FAILED",
-                    message: "your password is false",
+                    data: {
+                        message: "your password is false",
+                    },
                 });
             }
         } else {
             res.status(403).json({
                 status: "FAILED",
-                message: "your email is not registered",
+                data: {
+                    message: "your email is not registered",
+                },
             });
         }
     } catch (error) {
