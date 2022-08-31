@@ -38,11 +38,17 @@ module.exports = {
                     key: "id",
                 },
             },
+            verifyId: {
+                type: Sequelize.STRING,
+            },
+            accountSenderName: {
+                type: Sequelize.STRING,
+            },
             tax: {
                 type: Sequelize.STRING,
             },
             value: {
-                type: Sequelize.STRING,
+                type: Sequelize.REAL,
             },
             status: {
                 type: Sequelize.STRING,

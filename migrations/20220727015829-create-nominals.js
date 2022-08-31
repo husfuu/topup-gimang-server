@@ -12,10 +12,10 @@ module.exports = {
                 type: Sequelize.STRING,
             },
             coinQuantity: {
-                type: Sequelize.STRING,
+                type: Sequelize.INTEGER,
             },
             price: {
-                type: Sequelize.STRING,
+                type: Sequelize.REAL,
             },
             createdAt: {
                 allowNull: false,

@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
             bankAccountId: DataTypes.INTEGER,
             voucherId: DataTypes.INTEGER,
             nominalId: DataTypes.INTEGER,
+            verifyId: DataTypes.STRING,
             accountSenderName: DataTypes.STRING,
             tax: DataTypes.STRING,
             value: DataTypes.REAL,
