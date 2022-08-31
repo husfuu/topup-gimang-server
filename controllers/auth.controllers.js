@@ -113,14 +113,20 @@ exports.signIn = async (req, res, next) => {
         });
 
         if (player) {
-            const checkPassword = bcrypt.compareSync(password, player.password);
+            const playerBiodata = await Userbiodatas.findOne({
+                where: { userId: player.id },
+            });
 
+            const checkPassword = bcrypt.compareSync(password, player.password);
             if (checkPassword) {
                 const token = jwt.sign(
                     {
                         player: {
                             id: player.id,
                             email: player.email,
+                            name: playerBiodata.fullName,
+                            username: playerBiodata.username,
+                            avatar: playerBiodata.avatar,
                         },
                     },
                     JWT_KEY,
