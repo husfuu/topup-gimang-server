@@ -2,7 +2,8 @@ const { Transactions, Vouchers, Nominals, BankAccounts } = require("../models");
 
 exports.createTransactionByUser = async (req, res) => {
     try {
-        const { userId, bankAccountId, voucherId, nominalId } = req.body;
+        const { userId, verifyId, bankAccountId, voucherId, nominalId, value } =
+            req.body;
 
         if (!bankAccountId) {
             return res.status(401).json({
@@ -22,16 +23,12 @@ exports.createTransactionByUser = async (req, res) => {
             });
         }
 
-        // perhitungan value berdasarkan voucher yang dibeli
-        // status -> pending
-        // tax nilai default ajah
-
-        const tax = 1;
-        const value = 1;
+        const tax = "10%";
         const status = "pending";
 
         const newTransaction = await Transactions.create({
             userId,
+            verifyId,
             bankAccountId,
             voucherId,
             nominalId,
