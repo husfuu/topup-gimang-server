@@ -22,8 +22,8 @@ module.exports = (sequelize, DataTypes) => {
     Nominals.init(
         {
             coinName: DataTypes.STRING,
-            coinQuantity: DataTypes.STRING,
-            price: DataTypes.STRING,
+            coinQuantity: DataTypes.INTEGER,
+            price: DataTypes.REAL,
         },
         {
             sequelize,
