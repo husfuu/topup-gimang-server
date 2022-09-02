@@ -50,12 +50,27 @@ exports.viewCheckOut = async (req, res) => {
 
 exports.actionCheckOut = async (req, res) => {
     try {
-        // const voucherId = req.params.id;
-        const { bankAccountId, nominalId, voucherId } = req.body;
+        const {
+            userId,
+            verifyId,
+            bankAccountId,
+            voucherId,
+            nominalId,
+            categoryId,
+            value,
+        } = req.body;
 
+        if (!userId)
+            return res.status(401).json({
+                message: `user with id = ${userId} is doesn't exists`,
+            });
         if (!bankAccountId)
             return res.status(401).json({
-                message: `please fill bankAccountId`,
+                message: `bankAccount with id = ${bankAccountId} is doesn't exists`,
+            });
+        if (!verifyId)
+            return res.status(401).json({
+                message: `please fill the verifyId`,
             });
         if (!nominalId)
             return res.status(401).json({
@@ -64,6 +79,10 @@ exports.actionCheckOut = async (req, res) => {
         if (!voucherId)
             return res.status(401).json({
                 message: `voucher with id = ${voucherId} is doesn't exists`,
+            });
+        if (!categoryId)
+            return res.status(401).json({
+                message: `category with id = ${categoryId} is doesn't exists`,
             });
 
         const bankAccount = await BankAccounts.findOne({
@@ -88,15 +107,15 @@ exports.actionCheckOut = async (req, res) => {
                 message: `voucher with id = ${voucherId} is doesn't exists`,
             });
 
-        let tax = (10 / 100) * nominal.price;
-        let value = nominal.price - tax;
-        let status = "pending";
+        const tax = "10%";
+        const status = "pending";
 
         const newTransaction = await Transaction.create({
             userId,
             bankAccountId,
             voucherId,
             nominalId,
+            categoryId,
             tax,
             value,
             status,
@@ -105,7 +124,7 @@ exports.actionCheckOut = async (req, res) => {
         res.status(201).json({
             status: "SUCCESS",
             data: {
-                message: "new transaction successfully created",
+                message: "New transaction successfully created",
                 newTransaction,
             },
         });

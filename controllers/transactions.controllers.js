@@ -2,8 +2,15 @@ const { Transactions, Vouchers, Nominals, BankAccounts } = require("../models");
 
 exports.createTransactionByUser = async (req, res) => {
     try {
-        const { userId, verifyId, bankAccountId, voucherId, nominalId, value } =
-            req.body;
+        const {
+            userId,
+            verifyId,
+            bankAccountId,
+            voucherId,
+            nominalId,
+            value,
+            categoryId,
+        } = req.body;
 
         if (!bankAccountId) {
             return res.status(401).json({
@@ -32,6 +39,7 @@ exports.createTransactionByUser = async (req, res) => {
             bankAccountId,
             voucherId,
             nominalId,
+            categoryId,
             tax,
             value,
             status,

@@ -7,6 +7,9 @@ module.exports = (sequelize, DataTypes) => {
             this.hasMany(models.Vouchers, {
                 foreignKey: "categoryId",
             });
+            this.hasMany(models.Transactions, {
+                foreignKey: "categoryId",
+            });
         }
     }
     Categories.init(

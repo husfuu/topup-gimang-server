@@ -38,6 +38,15 @@ module.exports = {
                     key: "id",
                 },
             },
+            categoryId: {
+                type: Sequelize.INTEGER,
+                references: {
+                    model: {
+                        tableName: "Categories",
+                    },
+                    key: "id",
+                },
+            },
             verifyId: {
                 type: Sequelize.STRING,
             },

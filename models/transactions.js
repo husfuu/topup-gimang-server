@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
             this.belongsTo(models.Nominals, {
                 foreignKey: "nominalId",
             });
+
+            this.belongsTo(models.Categories, {
+                foreignKey: "categoryId",
+            });
         }
     }
     Transactions.init(
@@ -23,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
             bankAccountId: DataTypes.INTEGER,
             voucherId: DataTypes.INTEGER,
             nominalId: DataTypes.INTEGER,
+            categoryId: DataTypes.INTEGER,
             verifyId: DataTypes.STRING,
             accountSenderName: DataTypes.STRING,
             tax: DataTypes.STRING,
