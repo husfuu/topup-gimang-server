@@ -10,6 +10,7 @@ exports.createTransactionByUser = async (req, res) => {
             nominalId,
             value,
             categoryId,
+            accountSenderName,
         } = req.body;
 
         if (!bankAccountId) {
@@ -30,6 +31,15 @@ exports.createTransactionByUser = async (req, res) => {
             });
         }
 
+        if (!accountSenderName) {
+            return res.status(401).json({
+                status: "FAILED",
+                data: {
+                    message: "please fill the accountSenderName",
+                },
+            });
+        }
+
         const tax = "10%";
         const status = "pending";
 
@@ -40,6 +50,7 @@ exports.createTransactionByUser = async (req, res) => {
             voucherId,
             nominalId,
             categoryId,
+            accountSenderName,
             tax,
             value,
             status,
