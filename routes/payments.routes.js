@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const paymentController = require("../controllers/payments.controllers");
-const isLoginAdmin = require("../middlewares/auth");
+const { isLoginAdmin } = require("../middlewares/auth");
 
 router.get("/api/v1/payments/:id", paymentController.getPaymentById);
 router.get("/api/v1/payments", paymentController.getAllPayments);

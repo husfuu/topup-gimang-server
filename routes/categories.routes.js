@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const categoryController = require("../controllers/categories.controllers");
-const isLoginAdmin = require("../middlewares/auth");
+const { isLoginAdmin } = require("../middlewares/auth");
 
 // view
 router.get("/categories", isLoginAdmin, categoryController.viewAllCategories);

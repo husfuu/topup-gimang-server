@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const nominalController = require("../controllers/nominals.controllers");
-const isLoginAdmin = require("../middlewares/auth");
+const { isLoginAdmin } = require("../middlewares/auth");
 
 router.get("/api/v1/nominals/:id", nominalController.getNominalById);
 router.get("/api/v1/nominals/", nominalController.getAllNominal);

@@ -2,7 +2,7 @@ const router = require("express").Router();
 const voucherController = require("../controllers/vouchers.controllers");
 const multer = require("multer");
 const os = require("os");
-const isLoginAdmin = require("../middlewares/auth");
+const { isLoginAdmin } = require("../middlewares/auth");
 
 router.get("/api/v1/vouchers/:id", voucherController.getVoucherById);
 router.get("/api/v1/vouchers", voucherController.getAllVouchers);

@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const bankAccountController = require("../controllers/bankaccounts.controllers");
-const isLoginAdmin = require("../middlewares/auth");
+const { isLoginAdmin } = require("../middlewares/auth");
 
 router.get(
     "/api/v1/bankaccounts/:id",
