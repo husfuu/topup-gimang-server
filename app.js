@@ -22,6 +22,7 @@ const transactionRoutes = require("./routes/transactions.routes");
 const userbiodataRoutes = require("./routes/userbiodatas.routes");
 const voucherRoutes = require("./routes/vouchers.routes");
 const checkoutRoutes = require("./routes/checkout.routes");
+const playerRoutes = require("./routes/players.routes");
 
 const app = express();
 
@@ -62,6 +63,7 @@ app.use(transactionRoutes);
 app.use(userbiodataRoutes);
 app.use(voucherRoutes);
 app.use(checkoutRoutes);
+app.use(playerRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
