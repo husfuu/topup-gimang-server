@@ -52,7 +52,7 @@ exports.getLatestTransactions = async (req, res) => {
         if (status !== "") {
             const transactions = await Transactions.findAll({
                 where: { userId: req.player.id, status },
-                include: [Nominals],
+                include: [Nominals, Vouchers],
                 order: [["createdAt", "DESC"]],
             });
 
@@ -75,7 +75,7 @@ exports.getLatestTransactions = async (req, res) => {
         } else {
             const transactions = await Transactions.findAll({
                 where: { userId: req.player.id },
-                include: [Nominals],
+                include: [Nominals, Vouchers],
                 order: [["createdAt", "DESC"]],
             });
 
