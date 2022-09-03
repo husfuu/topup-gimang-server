@@ -54,6 +54,7 @@ exports.getLatestTransactions = async (req, res) => {
                 where: { userId: req.player.id, status },
                 include: [Nominals, Vouchers],
                 order: [["createdAt", "DESC"]],
+                limit: 5,
             });
 
             if (!transactions) {
@@ -77,6 +78,7 @@ exports.getLatestTransactions = async (req, res) => {
                 where: { userId: req.player.id },
                 include: [Nominals, Vouchers],
                 order: [["createdAt", "DESC"]],
+                limit: 5,
             });
 
             if (!transactions) {
