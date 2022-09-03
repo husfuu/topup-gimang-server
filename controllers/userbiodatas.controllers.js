@@ -1,17 +1,9 @@
-// const Userbiodatas = require('../models/userbiodatas');
 const { Userbiodatas } = require("../models");
 
 exports.createUserbiodata = async (req, res) => {
     try {
-        const {
-            // userId, // sementara
-            username,
-            fullName,
-            phoneNumber,
-            gender,
-            address,
-            avatar,
-        } = req.body;
+        const { username, fullName, phoneNumber, gender, address, avatar } =
+            req.body;
 
         if (!username) {
             return res.status(401).json({
@@ -79,7 +71,7 @@ exports.createUserbiodata = async (req, res) => {
 
 exports.getUserbiodataByUserId = async (req, res) => {
     try {
-        const userId = req.user?.id;
+        const userId = req.player.id;
 
         const userbiodata = await Userbiodatas.findOne({
             where: {
@@ -149,12 +141,11 @@ exports.getAllUserbiodatas = async (req, res) => {
 
 exports.updateUserbiodataByUserId = async (req, res) => {
     try {
-        const userId = req.user?.id;
+        const userId = req.player.id;
 
         const { username, fullName, phoneNumber, gender, address, avatar } =
             req.body;
 
-        // update userbiodata
         const userbiodata = await Userbiodatas.update(
             {
                 username,
