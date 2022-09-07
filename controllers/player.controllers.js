@@ -137,3 +137,44 @@ exports.getTransactionDetails = async (req, res) => {
         });
     } catch (error) {}
 };
+
+exports.getTotalTransactions = async (req, res) => {
+    try {
+        // const totalTrx = await Transactions.findAll({
+        //     where: { userId: req.player.id },
+        //     attributes: [[sequelize.fn("sum", sequelize.col("value"))]],
+        // });
+
+        const totalTrx = await Transactions.sum("value", {
+            where: { userId: req.player.id },
+        });
+
+        // await User.max('age', { where: { age: { [Op.lt]: 20 } } }); // 10
+
+        if (!totalTrx) {
+            return res.status(401).json({
+                status: "FAILED",
+                data: {
+                    message: "Transactions is not found!",
+                },
+            });
+        }
+
+        res.status(201).json({
+            status: "SUCCESS",
+            data: {
+                totalTrx,
+                message: "Succesfully get total spent by userId",
+            },
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: "FAILED",
+            data: {
+                name: error.name,
+                message: error.message,
+                stack: error.stack,
+            },
+        });
+    }
+};
