@@ -3,10 +3,10 @@ module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable("Nominals", {
             id: {
-                allowNull: false,
-                autoIncrement: true,
+                type: Sequelize.DataTypes.UUID,
+                defaultValue: Sequelize.literal("uuid_generate_v4()"),
                 primaryKey: true,
-                type: Sequelize.INTEGER,
+                allowNull: false,
             },
             coinName: {
                 type: Sequelize.STRING,

@@ -3,13 +3,13 @@ module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable("Vouchers", {
             id: {
-                allowNull: false,
-                autoIncrement: true,
+                type: Sequelize.DataTypes.UUID,
+                defaultValue: Sequelize.literal("uuid_generate_v4()"),
                 primaryKey: true,
-                type: Sequelize.INTEGER,
+                allowNull: false,
             },
             categoryId: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.UUID,
                 references: {
                     model: {
                         tableName: "Categories",

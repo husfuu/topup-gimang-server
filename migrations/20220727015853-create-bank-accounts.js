@@ -3,13 +3,13 @@ module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable("BankAccounts", {
             id: {
-                allowNull: false,
-                autoIncrement: true,
+                type: Sequelize.DataTypes.UUID,
+                defaultValue: Sequelize.literal("uuid_generate_v4()"),
                 primaryKey: true,
-                type: Sequelize.INTEGER,
+                allowNull: false,
             },
             adminId: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.UUID,
                 references: {
                     model: {
                         tableName: "Admins",
@@ -24,7 +24,7 @@ module.exports = {
                 type: Sequelize.STRING,
             },
             paymentId: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.UUID,
                 references: {
                     model: {
                         tableName: "Payments",

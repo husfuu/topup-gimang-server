@@ -3,7 +3,6 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
     class Transactions extends Model {
         static associate(models) {
-            // define association here
             this.belongsTo(models.Vouchers, {
                 foreignKey: "voucherId",
             });
@@ -24,10 +23,10 @@ module.exports = (sequelize, DataTypes) => {
     Transactions.init(
         {
             userId: DataTypes.STRING,
-            bankAccountId: DataTypes.INTEGER,
-            voucherId: DataTypes.INTEGER,
-            nominalId: DataTypes.INTEGER,
-            categoryId: DataTypes.INTEGER,
+            bankAccountId: DataTypes.STRING,
+            voucherId: DataTypes.STRING,
+            nominalId: DataTypes.STRING,
+            categoryId: DataTypes.STRING,
             verifyId: DataTypes.STRING,
             accountSenderName: DataTypes.STRING,
             tax: DataTypes.STRING,

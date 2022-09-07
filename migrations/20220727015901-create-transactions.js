@@ -3,16 +3,16 @@ module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable("Transactions", {
             id: {
-                allowNull: false,
-                autoIncrement: true,
+                type: Sequelize.DataTypes.UUID,
+                defaultValue: Sequelize.literal("uuid_generate_v4()"),
                 primaryKey: true,
-                type: Sequelize.INTEGER,
+                allowNull: false,
             },
             userId: {
-                type: Sequelize.STRING,
+                type: Sequelize.UUID,
             },
             bankAccountId: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.UUID,
                 references: {
                     model: {
                         tableName: "BankAccounts",
@@ -21,7 +21,7 @@ module.exports = {
                 },
             },
             voucherId: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.UUID,
                 references: {
                     model: {
                         tableName: "Vouchers",
@@ -30,7 +30,7 @@ module.exports = {
                 },
             },
             nominalId: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.UUID,
                 references: {
                     model: {
                         tableName: "Nominals",
@@ -39,7 +39,7 @@ module.exports = {
                 },
             },
             categoryId: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.UUID,
                 references: {
                     model: {
                         tableName: "Categories",

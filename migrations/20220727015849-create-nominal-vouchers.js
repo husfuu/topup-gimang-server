@@ -3,7 +3,7 @@ module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable("NominalVouchers", {
             voucherId: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.UUID,
                 references: {
                     model: {
                         tableName: "Vouchers",
@@ -12,7 +12,7 @@ module.exports = {
                 },
             },
             nominalId: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.UUID,
                 references: {
                     model: {
                         tableName: "Nominals",
