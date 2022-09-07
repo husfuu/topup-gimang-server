@@ -20,4 +20,10 @@ router.get(
     playerControllers.getTransactionDetails,
 );
 
+router.get(
+    "/api/v1/transaction-spent-total",
+    isLoginPlayer,
+    playerControllers.getTotalTransactions,
+);
+
 module.exports = router;
